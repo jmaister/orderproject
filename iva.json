@@ -3,7 +3,7 @@
         "pk": 1, 
         "model": "order.iva", 
         "fields": {
-            "percent": "21", 
+            "tipo": "21", 
             "name": "General 21%"
         }
     }, 
@@ -11,7 +11,7 @@
         "pk": 2, 
         "model": "order.iva", 
         "fields": {
-            "percent": "10", 
+            "tipo": "10", 
             "name": "Reducido 10%"
         }
     }, 
@@ -19,7 +19,7 @@
         "pk": 3, 
         "model": "order.iva", 
         "fields": {
-            "percent": "4", 
+            "tipo": "4", 
             "name": "Superreducido 4%"
         }
     }

@@ -1,35 +1,26 @@
 from base.admin import EntityAdmin
 from decimal import Decimal
 from django.contrib import admin
-from order.models import Product, Order, OrderItem, Client, Iva
+from order.models import Producto, Factura, FacturaItem, Cliente, Iva, Empresa
 
-class IvaAdmin(EntityAdmin):
-    pass
-
-class ClientAdmin(EntityAdmin):
-    pass
-
-class ProductAdmin(EntityAdmin):
-    pass
-
-class OrderItemInline(admin.TabularInline):
-    model = OrderItem
+class FacturaItemInline(admin.TabularInline):
+    model = FacturaItem
     readonly_fields = ('base', 'total_iva', 'total')
     
-class OrderAdmin(EntityAdmin):
+class FacturaAdmin(EntityAdmin):
     # FORM
     readonly_fields = ('base', 'total_iva', 'total')
     inlines = [
-        OrderItemInline,
+        FacturaItemInline,
     ]
 
     # LIST
-    list_filter = ('date',)
-    list_display = ('id', 'date', 'client', 'total', 'print_link',)
+    list_filter = ('fecha',)
+    list_display = ('id', 'codigo', 'fecha', 'cliente', 'total', 'print_link',)
     def print_link(self, obj):
-        return '<a target="top" href="%s/%d">Print</a>' % ('/print_order', obj.id,)
+        return '<a target="top" href="%s/%d">Imprimir</a>' % ('/order/print_order', obj.id,)
     print_link.allow_tags = True
-    print_link.short_description = 'Print'
+    print_link.short_description = 'Imprimir'
     
     # SAVE
     def save_formset(self, request, form, formset, change):
@@ -40,13 +31,13 @@ class OrderAdmin(EntityAdmin):
         print "save start"
         instances = formset.save(commit=False)
         for instance in instances:
-            if isinstance(instance, OrderItem):
+            if isinstance(instance, FacturaItem):
                 print "instance"
-                if instance.iva is None:
-                    instance.iva = instance.product.iva.percent
+                if instance.tipo_iva is None:
+                    instance.tipo_iva = instance.producto.iva.tipo
                 
-                instance.base = (instance.price * instance.quantity)
-                instance.total_iva = (instance.base * instance.iva / Decimal(100.0))
+                instance.base = (instance.precio * instance.cantidad)
+                instance.total_iva = (instance.base * instance.tipo_iva / Decimal(100.0))
                 instance.total = instance.base + instance.total_iva
                 sum_total_iva += instance.total_iva
                 sum_base += instance.base
@@ -59,14 +50,15 @@ class OrderAdmin(EntityAdmin):
         order.total = sum_total
         order.save()
         
-        super(OrderAdmin, self).save_formset(request, form, formset, change)
+        super(FacturaAdmin, self).save_formset(request, form, formset, change)
 
     # Javascript form
     class Media:
         js = ('admin/js/jquery.js', '/static/order/js/order.js', '/static/order/js/jshashtable-2.1.js','/static/order/js/jquery.numberformatter-1.2.3.js',)
 
 
-admin.site.register(Iva, IvaAdmin)
-admin.site.register(Client, ClientAdmin)
-admin.site.register(Product, ProductAdmin)
-admin.site.register(Order, OrderAdmin)
+admin.site.register(Empresa)
+admin.site.register(Iva)
+admin.site.register(Cliente)
+admin.site.register(Producto)
+admin.site.register(Factura, FacturaAdmin)

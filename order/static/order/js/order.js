@@ -1,34 +1,33 @@
 
 
 $(document).ready(function() {
-    $(".module").delegate("[id$=-product]", "change", function() {
-        var row = $(this).attr("id").split('id_orderitem_set-')[1].split("-product")[0];
-        var product_id = $(this).val();
-        if (product_id) {
-            var data = {"product_id":product_id};
-            $.getJSON("/json/product/", data, function(data) {
-                var price = data[0]["fields"]["price"];
+    $(".module").delegate("[id$=-producto]", "change", function() {
+        var row = $(this).attr("id").split('id_facturaitem_set-')[1].split("-producto")[0];
+        var producto_id = $(this).val();
+        if (producto_id) {
+            $.getJSON("/order/json/producto/"+ producto_id +"/", null, function(data) {
+                var precio = data[0]["fields"]["precio"];
                 var iva = data[0]["fields"]["iva"];
-                $("input#id_orderitem_set-"+row+"-price").val(price);
-                $.getJSON("/json/iva/"+ iva + "/", null, function(data) {
-	                $("input#id_orderitem_set-"+row+"-iva").val(data[0].fields.percent);
+                $("input#id_facturaitem_set-"+row+"-precio").val(precio);
+                $.getJSON("/order/json/iva/"+ iva + "/", null, function(data) {
+	                $("input#id_facturaitem_set-"+row+"-tipo_iva").val(data[0].fields.tipo);
 	                update_order_row(row);
                 });
             });
         } else {
-                $("input#id_orderitem_set-"+row+"-price").val('');
-                $("input#id_orderitem_set-"+row+"-iva").val('');
+                $("input#id_facturaitem_set-"+row+"-precio").val('');
+                $("input#id_facturaitem_set-"+row+"-tipo_iva").val('');
             update_order_row(row);
         }
     });
     
-    $(".module").delegate("[id$=-quantity]", "keyup blur", function() {
-        var row = $(this).attr("id").split('id_orderitem_set-')[1].split("-quantity")[0];
+    $(".module").delegate("[id$=-cantidad]", "keyup blur", function() {
+        var row = $(this).attr("id").split('id_facturaitem_set-')[1].split("-cantidad")[0];
         update_order_row(row);
     });
 
-    $(".module").delegate("[id$=-price]", "keyup blur", function() {
-        var row = $(this).attr("id").split('id_orderitem_set-')[1].split("-price")[0];
+    $(".module").delegate("[id$=-precio]", "keyup blur", function() {
+        var row = $(this).attr("id").split('id_facturaitem_set-')[1].split("-precio")[0];
         update_order_row(row);
     });
     
@@ -45,18 +44,18 @@ var fmt = function(n) {
 };
 
 function update_order_row(row) {
-    var price = $("input#id_orderitem_set-"+row+"-price");
-    var quantity = $("input#id_orderitem_set-"+row+"-quantity");
-    var iva = $("input#id_orderitem_set-"+row+"-iva");
-    var total_iva = $("tr#orderitem_set-"+ row +" td.field-total_iva p");
-    var base = $("tr#orderitem_set-"+ row +" td.field-base p");
-    var total = $("tr#orderitem_set-"+ row +" td.field-total p");
+    var precio = $("input#id_facturaitem_set-"+row+"-precio");
+    var cantidad = $("input#id_facturaitem_set-"+row+"-cantidad");
+    var tipo_iva = $("input#id_facturaitem_set-"+row+"-tipo_iva");
+    var total_iva = $("tr#facturaitem_set-"+ row +" td.field-total_iva p");
+    var base = $("tr#facturaitem_set-"+ row +" td.field-base p");
+    var total = $("tr#facturaitem_set-"+ row +" td.field-total p");
 
-    if (!quantity.val()) {
-        quantity.val(1);
+    if (!cantidad.val()) {
+        cantidad.val(1);
     }
-    var b = quantity.val() * price.val();
-    var ti = b * iva.val() / 100.0;
+    var b = cantidad.val() * precio.val();
+    var ti = b * tipo_iva.val() / 100.0;
 
 
 	base.html(fmt(b));

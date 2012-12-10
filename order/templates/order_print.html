@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>Factura de Venta {{ order.id }}</title>
+<title>Factura de Venta {{ factura.id }}//{{ factura.codigo }}</title>
 <style>
 body, pre {
   font-size: 16px;
@@ -27,7 +27,7 @@ td, th {
 </head>
 
 <body>
-<h1 align=center>Empresa</h1>
+<h1 align=center>{{factura.empresa.name}}</h1>
 
 <br>
 
@@ -35,9 +35,8 @@ td, th {
 <tr>
   <td width="60%" class="noborder">&nbsp;</td>
   <td width="40%" class="noborder">
-    C/ Dirección, 123<br>
-    46001 Valencia<br>
-    <b>NIF:</b> 12.123.123-X<br>
+    {{factura.empresa.direccion|linebreaks}}
+    <b>NIF:</b> {{factura.empresa.nif}}<br>
   </td>
 </table>
 <h1>FACTURA</h1>
@@ -48,15 +47,15 @@ td, th {
 <tr>
 <td width="50%">
   <b>Client:</b><br>
-  {{ order.client.name }}
-  <pre>{{ order.client.address }}</pre>
-  <b>NIF/CIF:</b> {{ order.client.nif }}<br>
+  {{factura.cliente.name}}
+  <pre>{{factura.cliente.address|linebreaks}}</pre>
+  <b>NIF/CIF:</b> {{factura.cliente.nif}}<br>
 </td>
 <td width="50%">
-  <b>Numero factura: {{ order.date|date:"Y" }}-{{ order.id }}</b><br>
+  <b>Numero factura: {{ factura.fecha|date:"Y" }} - {{factura.id}}//{{factura.codigo}}</b><br>
   <br>
   <br>
-  <b>Data: {{ order.date|date:"d-M-Y" }}</b><br>
+  <b>Data: {{ factura.fecha|date:"d-M-Y" }}</b><br>
 </td>
 </tr>
 </table>
@@ -70,12 +69,12 @@ td, th {
   <th>Preu</th>
   <th>Import</th>
 </tr>
-{% for order_item in orderitems %}
+{% for order_item in facturaitems %}
   <tr>
-    <td>{{ order_item.product.name }}</td>
-    <td align="right">{{ order_item.quantity }}</td>
-    <td align="right">{{ order_item.price|floatformat:2 }}</td>
-    <td align="right">{{ order_item.total|floatformat:2 }}</td>
+    <td>{{ order_item.producto.name }}</td>
+    <td align="right">{{ order_item.cantidad }}</td>
+    <td align="right">{{ order_item.precio|floatformat:2 }}</td>
+    <td align="right">{{ order_item.base|floatformat:2 }}</td>
   </tr>
 {% endfor %} 
 {% for x in blank_lines %}
@@ -100,7 +99,7 @@ td, th {
 <tr>
   <td width="55%" class="noborder">&nbsp;</td>
   <td width="25%" align="center"><b>Total import &euro;</b></td>
-  <td width="20%" align="right">{{ order.total|floatformat:2 }}</td>
+  <td width="20%" align="right">{{ factura.base|floatformat:2 }}</td>
 </tr>
 </table>
 
@@ -113,12 +112,12 @@ td, th {
   <th>Import IVA &euro;</th>
   <th>Total Factura &euro;</th>
 </tr>
-{% regroup orderitems by iva as iva_list %}
+{% regroup facturaitems by tipo_iva as iva_list %}
 <tr>
-  <td align="center">{{ order.base|floatformat:2 }}</td>
+  <td align="center">{{ factura.base|floatformat:2 }}</td>
   <td align="center">{{ iva_list.0.grouper|floatformat:2 }}</td>
-  <td align="center">{{ order.total_iva|floatformat:2 }}</td>
-  <td align="center">{{ order.total|floatformat:2 }}</td>
+  <td align="center">{{ factura.total_iva|floatformat:2 }}</td>
+  <td align="center">{{ factura.total|floatformat:2 }}</td>
 </tr>
 </table>
 
