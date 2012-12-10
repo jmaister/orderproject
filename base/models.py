@@ -13,7 +13,7 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['created']
+        #ordering = ['created']
 
 class BaseEntity(BaseModel):
     name = models.CharField(max_length=500)

@@ -1,0 +1,127 @@
+
+<html>
+
+<head>
+<title>Factura de Venta {{ order.id }}</title>
+<style>
+body, pre {
+  font-size: 16px;
+  font-family: verdana;
+}
+b {
+  font-size: 16px;
+}
+h1 {
+  font-size: 28px;
+}
+td, th {
+  padding: 5px;
+  margin: 0px;
+  border: 1px solid black;
+}
+.noborder {
+  border: 1px solid white;
+}
+</style>
+
+</head>
+
+<body>
+<h1 align=center>Empresa</h1>
+
+<br>
+
+<table width="100%">
+<tr>
+  <td width="60%" class="noborder">&nbsp;</td>
+  <td width="40%" class="noborder">
+    C/ Dirección, 123<br>
+    46001 Valencia<br>
+    <b>NIF:</b> 12.123.123-X<br>
+  </td>
+</table>
+<h1>FACTURA</h1>
+
+<br>
+
+<table width="100%">
+<tr>
+<td width="50%">
+  <b>Client:</b><br>
+  {{ order.client.name }}
+  <pre>{{ order.client.address }}</pre>
+  <b>NIF/CIF:</b> {{ order.client.nif }}<br>
+</td>
+<td width="50%">
+  <b>Numero factura: {{ order.date|date:"Y" }}-{{ order.id }}</b><br>
+  <br>
+  <br>
+  <b>Data: {{ order.date|date:"d-M-Y" }}</b><br>
+</td>
+</tr>
+</table>
+
+<br>
+
+<table width="100%" style="border:1px solid black;">
+<tr>
+  <th>Descripci&ograve;</th>
+  <th>Quantitat</th>
+  <th>Preu</th>
+  <th>Import</th>
+</tr>
+{% for order_item in orderitems %}
+  <tr>
+    <td>{{ order_item.product.name }}</td>
+    <td align="right">{{ order_item.quantity }}</td>
+    <td align="right">{{ order_item.price|floatformat:2 }}</td>
+    <td align="right">{{ order_item.total|floatformat:2 }}</td>
+  </tr>
+{% endfor %} 
+{% for x in blank_lines %}
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+{% endfor %} 
+<tr>
+  <td align=right><b>Forma de pagament:</b></td>
+  <td colspan="3">
+     Contat, xec o transfer&egrave;ncia
+  </td>
+</tr>
+</table>
+
+<br>
+
+<table width="100%">
+<tr>
+  <td width="55%" class="noborder">&nbsp;</td>
+  <td width="25%" align="center"><b>Total import &euro;</b></td>
+  <td width="20%" align="right">{{ order.total|floatformat:2 }}</td>
+</tr>
+</table>
+
+<br>
+
+<table width="100%">
+<tr>
+  <th>Base Imposable &euro;</th>
+  <th>% IVA</th>
+  <th>Import IVA &euro;</th>
+  <th>Total Factura &euro;</th>
+</tr>
+{% regroup orderitems by iva as iva_list %}
+<tr>
+  <td align="center">{{ order.base|floatformat:2 }}</td>
+  <td align="center">{{ iva_list.0.grouper|floatformat:2 }}</td>
+  <td align="center">{{ order.total_iva|floatformat:2 }}</td>
+  <td align="center">{{ order.total|floatformat:2 }}</td>
+</tr>
+</table>
+
+</body>
+
+</html>

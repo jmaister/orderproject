@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+
+		<title>base</title>
+		<meta name="description" content="" />
+		<meta name="author" content="jordi" />
+
+		<meta name="viewport" content="width=device-width; initial-scale=1.0" />
+
+		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+		<link rel="shortcut icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+	</head>
+
+	<body>
+		<div>
+			<header>
+				<h1>base</h1>
+			</header>
+			<nav>
+				<p>
+					<a href="/">Home</a>
+				</p>
+				<p>
+					<a href="/contact">Contact</a>
+				</p>
+			</nav>
+
+			<div>
+			{% block content %}{% endblock %}
+			</div>
+			
+			{% block footer %}
+			<footer>
+				<p>
+					&copy; Copyright  by jordi
+				</p>
+			</footer>
+			{% endblock %}
+		</div>
+	</body>
+</html>
