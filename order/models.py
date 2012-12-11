@@ -1,6 +1,7 @@
 from base.models import BaseEntity, BaseModel
+from django.contrib.auth.models import User
 from django.db import models
-
+from django.db.models.signals import post_save
 
 class Empresa(BaseEntity):
     direccion = models.TextField()
@@ -42,3 +43,17 @@ class FacturaItem(BaseModel):
     total_iva = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     base = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+
+class UserProfile(models.Model):
+    # This field is required.
+    user = models.OneToOneField(User)
+
+    # Other fields here
+    empresa = models.ForeignKey(Empresa, null=True)
+
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+    
+post_save.connect(create_user_profile, sender=User)

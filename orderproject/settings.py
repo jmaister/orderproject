@@ -113,6 +113,7 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     'order',
+    'orderproject',
 
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -155,3 +156,5 @@ LOGGING = {
         },
     }
 }
+
+AUTH_PROFILE_MODULE = 'order.UserProfile'
