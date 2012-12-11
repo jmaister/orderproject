@@ -1,11 +1,12 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from orderproject.views import home
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'orderproject.views.home', name='home'),
+    url(r'^$', home, name='home'),
     url(r'^order/', include('order.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
