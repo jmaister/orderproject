@@ -1,5 +1,4 @@
-from django.conf.urls.defaults import patterns, include, url
-from django.contrib import admin
+from django.conf.urls.defaults import patterns, url
 from order.views import json_producto, print_order, json_iva
 
 urlpatterns = patterns('',

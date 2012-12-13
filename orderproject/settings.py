@@ -7,7 +7,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('admin', 'admin@admin.com'),
 )
 
 MANAGERS = ADMINS
@@ -91,6 +91,9 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    # Gzip
+    'django.middleware.gzip.GZipMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -98,6 +101,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    # Transaccion cada request HTTP
+    'django.middleware.transaction.TransactionMiddleware',
 )
 
 ROOT_URLCONF = 'orderproject.urls'
@@ -115,6 +121,19 @@ INSTALLED_APPS = (
     'order',
     'orderproject',
 
+    # django-allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+#    'allauth.socialaccount.providers.facebook',
+#    'allauth.socialaccount.providers.google',
+#    'allauth.socialaccount.providers.github',
+#    'allauth.socialaccount.providers.linkedin',
+#    'allauth.socialaccount.providers.openid',
+#    'allauth.socialaccount.providers.persona',
+#    'allauth.socialaccount.providers.soundcloud',
+#    'allauth.socialaccount.providers.twitter',
+
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -125,6 +144,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    
+    'django.contrib.messages',
+    'django.contrib.humanize',
     
 )
 
@@ -158,3 +180,30 @@ LOGGING = {
 }
 
 AUTH_PROFILE_MODULE = 'order.UserProfile'
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    # messages
+    'django.contrib.messages.context_processors.messages',
+    # allauth 
+    'allauth.account.context_processors.account',
+    'allauth.socialaccount.context_processors.socialaccount'
+)
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+# django-allauth config
+ACCOUNT_AUTHENTICATION_METHOD = "username"
+ACCOUNT_EMAIL_REQUIRED = False
+#ACCOUNT_EMAIL_VERIFICATION = "none"
+
+LOGIN_REDIRECT_URL = '/'
