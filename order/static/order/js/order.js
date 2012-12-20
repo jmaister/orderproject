@@ -1,7 +1,7 @@
 
 
 $(document).ready(function() {
-    $(".module").delegate("[id$=-producto]", "change", function() {
+    $(".order-factura").delegate("[id$=-producto]", "change", function() {
         var row = $(this).attr("id").split('id_facturaitem_set-')[1].split("-producto")[0];
         var producto_id = $(this).val();
         if (producto_id) {
@@ -21,12 +21,12 @@ $(document).ready(function() {
         }
     });
     
-    $(".module").delegate("[id$=-cantidad]", "keyup blur", function() {
+    $(".order-factura").delegate("[id$=-cantidad]", "keyup blur", function() {
         var row = $(this).attr("id").split('id_facturaitem_set-')[1].split("-cantidad")[0];
         update_order_row(row);
     });
 
-    $(".module").delegate("[id$=-precio]", "keyup blur", function() {
+    $(".order-factura").delegate("[id$=-precio]", "keyup blur", function() {
         var row = $(this).attr("id").split('id_facturaitem_set-')[1].split("-precio")[0];
         update_order_row(row);
     });
@@ -44,6 +44,7 @@ var fmt = function(n) {
 };
 
 function update_order_row(row) {
+    debugger;
     var precio = $("input#id_facturaitem_set-"+row+"-precio");
     var cantidad = $("input#id_facturaitem_set-"+row+"-cantidad");
     var tipo_iva = $("input#id_facturaitem_set-"+row+"-tipo_iva");
@@ -78,3 +79,31 @@ var sumRows = function(fromField, toField) {
     });
     $("div.field-"+ toField + " p").html(fmt(sum));
 };
+
+
+
+$(function(){
+    $('.inline-group .inline-related .delete input').each(function(i,e){
+        $(e).bind('change', function(e){
+            if(this.checked) {
+                // marked for deletion
+                $(this).parents('.inline-related').children('fieldset.module').addClass('collapsed collapse')
+            }else{
+                $(this).parents('.inline-related').children('fieldset.module').removeClass('collapsed')
+            }
+        })
+    })
+});
+
+$(function(){
+    $('.inline-group ').each(function(i,e){
+        $(e).bind('change', function(e){
+            if(this.checked) {
+                // marked for deletion
+                $(this).parents('.inline-related').children('fieldset.module').addClass('collapsed collapse')
+            }else{
+                $(this).parents('.inline-related').children('fieldset.module').removeClass('collapsed')
+            }
+        })
+    })
+});

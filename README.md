@@ -7,4 +7,4 @@ Spanish:
 
 Projecto DJango para facturación de pequeñas empresas en España.
 
-[pymes, factura, facturación, España, Spain]
+[pymes, pyme, factura, facturación, España, Spain, empresa, empresas]

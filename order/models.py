@@ -1,4 +1,5 @@
 from base.models import BaseEntity, BaseModel
+from decimal import Decimal
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -29,6 +30,21 @@ class Factura(BaseModel):
     base = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
+    def save(self):
+        sum_total_iva = 0
+        sum_base = 0
+        sum_total = 0
+        for factura_item in self.facturaitem_set.all():
+            factura_item.save()
+            sum_total_iva += factura_item.total_iva
+            sum_base += factura_item.base
+            sum_total += factura_item.total
+            
+        self.total_iva = sum_total_iva
+        self.base = sum_base
+        self.total = sum_total
+        super(Factura, self).save()
+
     def __unicode__(self):
         return "[" + str(self.id) + "][" + str(self.fecha) + "] " + self.cliente.name
 
@@ -44,6 +60,14 @@ class FacturaItem(BaseModel):
     base = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
+    def save(self):
+        if self.tipo_iva is None:
+            self.tipo_iva = self.producto.iva.tipo
+            
+        self.base = (self.precio * self.cantidad)
+        self.total_iva = (self.base * self.tipo_iva / Decimal(100.0))
+        self.total = self.base + self.total_iva
+        super(FacturaItem, self).save()
 
 class UserProfile(models.Model):
     # This field is required.
