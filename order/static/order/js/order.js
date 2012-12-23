@@ -31,6 +31,8 @@ $(document).ready(function() {
         update_order_row(row);
     });
     
+    update_all();
+    
 });
 
 
@@ -44,7 +46,10 @@ var fmt = function(n) {
 };
 
 function update_order_row(row) {
-    debugger;
+    if (!$("select#id_facturaitem_set-"+row+"-producto").val()) {
+        return;
+    }
+    
     var precio = $("input#id_facturaitem_set-"+row+"-precio");
     var cantidad = $("input#id_facturaitem_set-"+row+"-cantidad");
     var tipo_iva = $("input#id_facturaitem_set-"+row+"-tipo_iva");
@@ -80,30 +85,9 @@ var sumRows = function(fromField, toField) {
     $("div.field-"+ toField + " p").html(fmt(sum));
 };
 
-
-
-$(function(){
-    $('.inline-group .inline-related .delete input').each(function(i,e){
-        $(e).bind('change', function(e){
-            if(this.checked) {
-                // marked for deletion
-                $(this).parents('.inline-related').children('fieldset.module').addClass('collapsed collapse')
-            }else{
-                $(this).parents('.inline-related').children('fieldset.module').removeClass('collapsed')
-            }
-        })
-    })
-});
-
-$(function(){
-    $('.inline-group ').each(function(i,e){
-        $(e).bind('change', function(e){
-            if(this.checked) {
-                // marked for deletion
-                $(this).parents('.inline-related').children('fieldset.module').addClass('collapsed collapse')
-            }else{
-                $(this).parents('.inline-related').children('fieldset.module').removeClass('collapsed')
-            }
-        })
-    })
-});
+var update_all = function() {
+    var numrows = $('#id_facturaitem_set-TOTAL_FORMS').val();
+    for (var i=0;i<numrows;i++) {
+        update_order_row(i);
+    }
+};
