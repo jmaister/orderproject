@@ -1,5 +1,8 @@
 from django.conf.urls.defaults import patterns, url
+from django.contrib import admin
 from order import views
+
+admin.autodiscover()
 
 
 urlpatterns = patterns('',
