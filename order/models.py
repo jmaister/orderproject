@@ -12,6 +12,7 @@ class Iva(BaseEntity):
     tipo = models.DecimalField(max_digits=5, decimal_places=2)
     
 class Producto(BaseEntity):
+    desc_imprimir = models.CharField(max_length=50, verbose_name="Nombre para imprimir")
     empresa = models.ForeignKey(Empresa)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     iva = models.ForeignKey(Iva)
