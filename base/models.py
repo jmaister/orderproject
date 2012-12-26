@@ -6,7 +6,7 @@ class BaseModel(models.Model):
 
     def __unicode__(self):
         # return '%s[%d]' % (__class__, self.id)
-        return '[%d]' % (self.id)
+        return '[%d]' % (self.id or 0)
 
     def get_absolute_url(self):
         return '/%s/%d/' % (__class__, self.id)

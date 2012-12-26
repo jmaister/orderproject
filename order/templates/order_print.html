@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>Factura de Venta {{ factura.id }}//{{ factura.codigo }}</title>
+<title>Factura de Venta [{{ factura.codigo }}]</title>
 <style>
 body, pre {
   font-size: 16px;
@@ -27,7 +27,7 @@ td, th {
 </head>
 
 <body>
-<h1 align=center>{{factura.empresa.name}}</h1>
+<h1 align="center">{{factura.empresa.name}}</h1>
 
 <br>
 
@@ -52,7 +52,7 @@ td, th {
   <b>NIF/CIF:</b> {{factura.cliente.nif}}<br>
 </td>
 <td width="50%">
-  <b>Numero factura: {{ factura.fecha|date:"Y" }} - {{factura.id}}//{{factura.codigo}}</b><br>
+  <b>Numero factura: [{{factura.codigo}}]</b><br>
   <br>
   <br>
   <b>Data: {{ factura.fecha|date:"d-M-Y" }}</b><br>
@@ -71,7 +71,7 @@ td, th {
 </tr>
 {% for order_item in facturaitems %}
   <tr>
-    <td>{{ order_item.producto.name }}</td>
+    <td>{{ order_item.producto.desc_imprimir }}</td>
     <td align="right">{{ order_item.cantidad }}</td>
     <td align="right">{{ order_item.precio|floatformat:2 }}</td>
     <td align="right">{{ order_item.base|floatformat:2 }}</td>
@@ -86,7 +86,7 @@ td, th {
   </tr>
 {% endfor %} 
 <tr>
-  <td align=right><b>Forma de pagament:</b></td>
+  <td align="right"><b>Forma de pagament:</b></td>
   <td colspan="3">
      Contat, xec o transfer&egrave;ncia
   </td>

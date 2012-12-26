@@ -10,13 +10,13 @@ $(document).ready(function() {
                 var iva = data[0]["fields"]["iva"];
                 $("input#id_facturaitem_set-"+row+"-precio").val(precio);
                 $.getJSON("/order/json/iva/"+ iva + "/", null, function(data) {
-	                $("input#id_facturaitem_set-"+row+"-tipo_iva").val(data[0].fields.tipo);
+	                $("tr#facturaitem_set-"+row+" td.field-tipo_iva p").html(data[0].fields.tipo);
 	                update_order_row(row);
                 });
             });
         } else {
                 $("input#id_facturaitem_set-"+row+"-precio").val('');
-                $("input#id_facturaitem_set-"+row+"-tipo_iva").val('');
+                $("tr#facturaitem_set-"+row+" td.field-tipo_iva p").html('0,00');
             update_order_row(row);
         }
     });
@@ -52,7 +52,7 @@ function update_order_row(row) {
     
     var precio = $("input#id_facturaitem_set-"+row+"-precio");
     var cantidad = $("input#id_facturaitem_set-"+row+"-cantidad");
-    var tipo_iva = $("input#id_facturaitem_set-"+row+"-tipo_iva");
+    var tipo_iva = $("tr#facturaitem_set-"+ row +" td.field-tipo_iva p");
     var total_iva = $("tr#facturaitem_set-"+ row +" td.field-total_iva p");
     var base = $("tr#facturaitem_set-"+ row +" td.field-base p");
     var total = $("tr#facturaitem_set-"+ row +" td.field-total p");
@@ -61,7 +61,7 @@ function update_order_row(row) {
         cantidad.val(1);
     }
     var b = cantidad.val() * precio.val();
-    var ti = b * tipo_iva.val() / 100.0;
+    var ti = b * tipo_iva.html() / 100.0;
 
 
 	base.html(fmt(b));
