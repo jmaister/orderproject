@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>Factura de Venta {{ factura.id }}//{{ factura.codigo }}</title>
+<title>Factura de Venta [{{ factura.codigo }}]</title>
 <style>
 body, pre {
   font-size: 16px;
@@ -52,7 +52,7 @@ td, th {
   <b>NIF/CIF:</b> {{factura.cliente.nif}}<br>
 </td>
 <td width="50%">
-  <b>Numero factura: {{ factura.fecha|date:"Y" }} - {{factura.id}}//{{factura.codigo}}</b><br>
+  <b>Numero factura: [{{factura.codigo}}]</b><br>
   <br>
   <br>
   <b>Data: {{ factura.fecha|date:"d-M-Y" }}</b><br>

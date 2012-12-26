@@ -92,7 +92,7 @@ class FacturaItemInline(admin.TabularInline):
 class FacturaAdmin(EmpresaEntity):
     # FORM
     exclude = ('empresa',)
-    readonly_fields = ('base', 'total_iva', 'total')
+    readonly_fields = ('codigo', 'base', 'total_iva', 'total')
     inlines = [
         FacturaItemInline,
     ]
@@ -107,12 +107,22 @@ class FacturaAdmin(EmpresaEntity):
     
     def recalculate(self, obj):
         obj.calculate()
+        if obj.codigo is None or obj.codigo == '':
+            codigo = '' 
+            try:
+                codigo = Factura.objects.filter(empresa=obj.empresa).exclude(pk=obj.pk).order_by('-id')[0].codigo
+                partes = codigo.split('-')
+                codigo = '%d-%03d' % (obj.fecha.year, int(partes[1]) + 1)
+            except:
+                codigo = '%d-%03d' % (obj.fecha.year, 1)
+                
+            obj.codigo = codigo
         obj.save()
         return obj
 
     # LIST
     list_filter = ('fecha',)
-    list_display = ('id', 'codigo', 'fecha', 'cliente', 'total', 'print_link',)
+    list_display = ('codigo', 'fecha', 'cliente', 'total', 'print_link',)
     def print_link(self, obj):
         return '<a target="top" href="%s/%d">Imprimir</a>' % ('/order/print_order', obj.id,)
     print_link.allow_tags = True
