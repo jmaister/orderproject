@@ -131,8 +131,9 @@ class FacturaAdmin(EmpresaEntity):
     
     def pagado(self, obj):
         if obj.fecha_pagado is not None:
-            return 'SI'
-        return ''
+            return '<i class="icon-ok"></i>'
+        return '<i class="icon-remove"></i>'
+    pagado.allow_tags = True
     pagado.short_description = 'Pagado'
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
