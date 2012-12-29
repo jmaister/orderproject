@@ -9,7 +9,7 @@ from django.core.exceptions import ValidationError
 from django.forms.fields import BooleanField
 from django.forms.widgets import HiddenInput
 from django.utils.translation import ugettext_lazy
-from order.models import Producto, Factura, FacturaItem, Cliente, Iva, Empresa
+from order.models import Producto, Factura, FacturaItem, Cliente, Empresa
 
 ## http://tryolabs.com/Blog/2012/06/18/django-administration-interface-non-staff-users/
 
@@ -121,7 +121,7 @@ class FacturaAdmin(EmpresaEntity):
         return obj
 
     # LIST
-    list_filter = ('fecha', 'cliente',)
+    list_filter = ('fecha', )
     list_display = ('codigo', 'fecha', 'cliente', 'total', 'pagado', 'print_link',)
     
     def print_link(self, obj):
@@ -156,9 +156,6 @@ class ProductoAdmin(EmpresaEntity):
     pass
 
 order_admin_site.register(Empresa)
-order_admin_site.register(Iva)
 order_admin_site.register(Cliente, ClienteAdmin)
 order_admin_site.register(Producto, ProductoAdmin)
 order_admin_site.register(Factura, FacturaAdmin)
-
-
