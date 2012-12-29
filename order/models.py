@@ -33,6 +33,7 @@ class Factura(BaseModel):
     total_iva = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     base = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    fecha_pagado = models.DateField(blank=True, null=True)
 
     def calculate(self):
         sum_total_iva = 0

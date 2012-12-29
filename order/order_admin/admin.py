@@ -121,12 +121,19 @@ class FacturaAdmin(EmpresaEntity):
         return obj
 
     # LIST
-    list_filter = ('fecha',)
-    list_display = ('codigo', 'fecha', 'cliente', 'total', 'print_link',)
+    list_filter = ('fecha', 'cliente',)
+    list_display = ('codigo', 'fecha', 'cliente', 'total', 'pagado', 'print_link',)
+    
     def print_link(self, obj):
         return '<a target="top" href="%s/%d">Imprimir</a>' % ('/order/print_order', obj.id,)
     print_link.allow_tags = True
     print_link.short_description = 'Imprimir'
+    
+    def pagado(self, obj):
+        if obj.fecha_pagado is not None:
+            return 'SI'
+        return ''
+    pagado.short_description = 'Pagado'
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "cliente":
