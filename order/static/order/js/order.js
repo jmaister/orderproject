@@ -61,7 +61,7 @@ function update_order_row(row) {
         cantidad.val(1);
     }
     var b = cantidad.val() * precio.val();
-    var ti = b * tipo_iva.html() / 100.0;
+    var ti = b * parse(tipo_iva.html()) / 100.0;
 
 
 	base.html(fmt(b));

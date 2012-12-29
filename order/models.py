@@ -44,6 +44,7 @@ class Factura(BaseModel):
             sum_total_iva += factura_item.total_iva
             sum_base += factura_item.base
             sum_total += factura_item.total
+            factura_item.save()
             
         self.total_iva = sum_total_iva
         self.base = sum_base
@@ -68,7 +69,7 @@ class FacturaItem(BaseModel):
         return None
 
     def calculate(self):
-        if self.tipo_iva is None:
+        if self.tipo_iva is None or self.tipo_iva == 0:
             self.tipo_iva = self.producto.iva.tipo
             
         self.base = (self.precio * self.cantidad)
