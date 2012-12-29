@@ -108,15 +108,15 @@ class FacturaAdmin(EmpresaEntity):
     def recalculate(self, obj):
         obj.calculate()
         if obj.codigo is None or obj.codigo == '':
-            codigo = '' 
+            num = 1
             try:
                 codigo = Factura.objects.filter(empresa=obj.empresa).exclude(pk=obj.pk).order_by('-id')[0].codigo
                 partes = codigo.split('-')
-                codigo = '%d-%03d' % (obj.fecha.year, int(partes[1]) + 1)
+                num = int(partes[1]) + 1
             except:
-                codigo = '%d-%03d' % (obj.fecha.year, 1)
+                pass
                 
-            obj.codigo = codigo
+            obj.codigo = '%d-%03d' % (obj.fecha.year, num)
         obj.save()
         return obj
 
