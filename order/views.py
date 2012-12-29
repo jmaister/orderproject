@@ -20,7 +20,7 @@ def print_order(request, factura_id):
     factura = Factura.objects.get(id=factura_id)
     facturaitems = FacturaItem.objects.select_related().filter(factura_id=factura_id).all()
     
-    t = get_template('order_print.html')
+    t = get_template('order_print_bs.html')
     html = t.render(Context(
         {'factura': factura,
          'facturaitems': facturaitems,
