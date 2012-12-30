@@ -39,7 +39,10 @@ $(document).ready(function() {
 var numberFormat = {format:"#,###.00", locale:"es"};
 
 var parse = function(n) {
-	return $.parseNumber(n, numberFormat);
+    if (n != undefined) {
+	   return $.parseNumber(n, numberFormat);
+	}
+	return null;
 };
 var fmt = function(n) {
 	return $.formatNumber(n, numberFormat);
