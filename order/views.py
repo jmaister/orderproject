@@ -7,14 +7,15 @@ from django.template.context import Context
 from django.template.loader import get_template
 from order.models import Producto, Factura, FacturaItem, Iva
 
-
-def json_producto(request, prod_id):
-    result = Producto.objects.filter(id=prod_id)
+def _json_view(request, clazz, pk):
+    result = clazz.objects.filter(pk=pk)
     return HttpResponse(serializers.serialize('json', result), mimetype='application/json')
 
-def json_iva(request, iva_id):
-    result = Iva.objects.filter(id=iva_id)
-    return HttpResponse(serializers.serialize('json', result), mimetype='application/json')
+def json_producto(request, pk):
+    return _json_view(request, Producto, pk)
+
+def json_iva(request, pk):
+    return _json_view(request, Iva, pk)
 
 def print_order(request, factura_id):
     factura = Factura.objects.get(id=factura_id)
@@ -29,25 +30,23 @@ def print_order(request, factura_id):
         ))
     return HttpResponse(html)    
 
-
 class FacturaForm(ModelForm):
     class Meta:
         model = Factura
+    def __init__(self, *args, **kwargs):
+        super(FacturaForm, self).__init__(*args, **kwargs)
 
 def factura_update(request, pk):
-    factura = Factura.objects.get(pk=pk)
 
     FacturaInlineFormSet = inlineformset_factory(Factura, FacturaItem)
-    if request.method == "POST":
-        form = FacturaForm(request.POST, request.FILES, instance=factura)
-        formset = FacturaInlineFormSet(request.POST, request.FILES, instance=factura)
-        if form.is_valid() and formset.is_valid():
-            form.save()
-            formset.save()
-            # Do something.
-    else:
-        form = FacturaForm(instance=factura)
-        formset = FacturaInlineFormSet(instance=factura)
+    
+    factura = Factura.objects.get(pk=pk)
+    form = FacturaForm(request.POST or None, request.FILES or None, instance=factura)
+    formset = FacturaInlineFormSet(request.POST or None, request.FILES or None, instance=factura)
+    
+    if request.method == "POST" and form.is_valid() and formset.is_valid():
+        form.save()
+        formset.save()
 
     return render(request, "order/factura_form.html", {
         "form": form,
