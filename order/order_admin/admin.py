@@ -79,6 +79,22 @@ class EmpresaEntity(EntityAdmin):
     def queryset(self, request):
         return EntityAdmin.queryset(self, request).filter(empresa=self.get_empresa(request))
 
+class EmpresaAdmin(EntityAdmin):
+    def has_add_permission(self, request):
+        return False
+    
+    def get_empresa(self, request):
+        return request.user.get_profile().empresa
+
+    """
+    def save_form(self, request, form, change):
+        #form.instance.empresa = request.user.get_profile().empresa
+        return EntityAdmin.save_form(self, request, form, change)
+    """
+    
+    def queryset(self, request):
+        return EntityAdmin.queryset(self, request).filter(id=self.get_empresa(request).id)
+
 
 class FacturaItemInline(admin.TabularInline):
     model = FacturaItem
@@ -155,7 +171,7 @@ class ClienteAdmin(EmpresaEntity):
 class ProductoAdmin(EmpresaEntity):
     pass
 
-order_admin_site.register(Empresa)
+order_admin_site.register(Empresa, EmpresaAdmin)
 order_admin_site.register(Cliente, ClienteAdmin)
 order_admin_site.register(Producto, ProductoAdmin)
 order_admin_site.register(Factura, FacturaAdmin)
