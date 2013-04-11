@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 
 
 def home(request):
     if request.user.is_authenticated():
-        return render(request, "home.html")
+        return redirect('/edit/')
     else:
         return redirect('account_login')

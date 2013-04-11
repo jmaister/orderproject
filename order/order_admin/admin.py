@@ -77,23 +77,18 @@ class EmpresaEntity(EntityAdmin):
         return EntityAdmin.save_form(self, request, form, change)
     
     def queryset(self, request):
-        return EntityAdmin.queryset(self, request).filter(empresa=self.get_empresa(request))
+        return EntityAdmin.queryset(self, request).filter(empresa__id=request.user.id)
 
 class EmpresaAdmin(EntityAdmin):
+
     def has_add_permission(self, request):
         return False
-    
-    def get_empresa(self, request):
-        return request.user.get_profile().empresa
 
-    """
-    def save_form(self, request, form, change):
-        #form.instance.empresa = request.user.get_profile().empresa
-        return EntityAdmin.save_form(self, request, form, change)
-    """
+    def has_delete_permission(self, request, obj=None):
+        return False
     
     def queryset(self, request):
-        return EntityAdmin.queryset(self, request).filter(id=self.get_empresa(request).id)
+        return EntityAdmin.queryset(self, request).filter(id=request.user.id)
 
 
 class FacturaItemInline(admin.TabularInline):
@@ -159,7 +154,7 @@ class FacturaAdmin(EmpresaEntity):
 
     # Javascript form
     class Media:
-        js = ('admin/js/jquery.js', '/static/order/js/order.js', '/static/order/js/jshashtable-2.1.js','/static/order/js/jquery.numberformatter-1.2.3.js',)
+        js = ('http://code.jquery.com/jquery-1.9.1.min.js', '/static/order/js/order.js', '/static/order/js/jshashtable-2.1.js','/static/order/js/jquery.numberformatter-1.2.3.js',)
         css = {
                all: ('/static/order/css/order.css',)
         }

@@ -1,6 +1,6 @@
 from base.models import BaseEntity, BaseModel
 from decimal import Decimal
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db import models
 from django.db.models.signals import post_save
 
@@ -82,9 +82,16 @@ class UserProfile(models.Model):
     #user = models.OneToOneField(User)
     #user = models.ForeignKey(User, unique=True)
     user = models.OneToOneField(User, unique=True, primary_key=True, related_name="user")
-    
+
     # Other fields here
     empresa = models.ForeignKey(Empresa, null=True)
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        # Default group with default perms
+        default_group = Group.objects.get(name='Usuario')
+        self.user.groups.add(default_group)
+        
+        return models.Model.save(self, force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
