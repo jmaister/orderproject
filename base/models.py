@@ -5,11 +5,10 @@ class BaseModel(models.Model):
     #modified = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        # return '%s[%d]' % (__class__, self.id)
-        return '[%d]' % (self.id or 0)
+        return '%s[%d]' % (self.__class__.__name__, self.id or 0)
 
     def get_absolute_url(self):
-        return '/%s/%d/' % (__class__, self.id)
+        return '/%s/%d/' % (self.__class__.__name__, self.id)
 
     class Meta:
         abstract = True
@@ -18,12 +17,12 @@ class BaseModel(models.Model):
 class BaseEntity(BaseModel):
     name = models.CharField(max_length=500)
     #active = models.BooleanField(default=True,editable=False)
-      
+
     def __unicode__(self):
         return self.name
 
     def get_absolute_url(self):
-        return '/%s/%d/' % (__class__, self.id)
+        return '/%s/%d/' % (self.__class__.__name__, self.id)
 
     class Meta:
         abstract = True
