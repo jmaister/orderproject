@@ -6,6 +6,7 @@ PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+
 ADMINS = (
     ('admin', 'admin@admin.com'),
 )
@@ -87,7 +88,6 @@ SECRET_KEY = '#0!lfhb&amp;$ucvrdw0e5(x0t&amp;9iz&amp;*flkvh*q^mr33i62yzv6r8!'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -125,8 +125,8 @@ INSTALLED_APPS = (
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-#    'allauth.socialaccount.providers.facebook',
-#    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
 #    'allauth.socialaccount.providers.github',
 #    'allauth.socialaccount.providers.linkedin',
 #    'allauth.socialaccount.providers.openid',
@@ -142,14 +142,15 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'django_admin_bootstrapped',
+
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    
+
     'django.contrib.messages',
     'django.contrib.humanize',
-    
+
 )
 
 # A sample logging configuration. The only tangible logging
@@ -181,8 +182,6 @@ LOGGING = {
     }
 }
 
-AUTH_PROFILE_MODULE = 'order.UserProfile'
-
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.auth.context_processors.auth',
@@ -203,9 +202,23 @@ AUTHENTICATION_BACKENDS = (
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
+# Django User profile config
+AUTH_PROFILE_MODULE = 'order.UserProfile'
+
 # django-allauth config
-ACCOUNT_AUTHENTICATION_METHOD = "username"
-ACCOUNT_EMAIL_REQUIRED = False
-#ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
+ACCOUNT_SIGNUP_FORM_CLASS = 'orderproject.forms.SignupForm'
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+#ACCOUNT_EMAIL_VERIFICATION  (="mandatory" | "optional" | "none")
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_USERNAME_MIN_LENGTH = 6
+SOCIALACCOUNT_AUTO_SIGNUP = False
 
 LOGIN_REDIRECT_URL = '/'
+
+
+try:
+    from prod_settings import *
+except ImportError:
+    pass
