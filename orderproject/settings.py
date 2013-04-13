@@ -125,8 +125,8 @@ INSTALLED_APPS = (
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.google',
+#    'allauth.socialaccount.providers.facebook',
+#    'allauth.socialaccount.providers.google',
 #    'allauth.socialaccount.providers.github',
 #    'allauth.socialaccount.providers.linkedin',
 #    'allauth.socialaccount.providers.openid',
@@ -210,9 +210,6 @@ ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_SIGNUP_FORM_CLASS = 'orderproject.forms.SignupForm'
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_REQUIRED = True
-#ACCOUNT_EMAIL_VERIFICATION  (="mandatory" | "optional" | "none")
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_USERNAME_MIN_LENGTH = 6
 SOCIALACCOUNT_AUTO_SIGNUP = False
 
 LOGIN_REDIRECT_URL = '/'

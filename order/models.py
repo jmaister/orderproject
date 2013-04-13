@@ -88,8 +88,11 @@ class UserProfile(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         # Default group with default perms
-        default_group = Group.objects.get(name='Usuario')
-        self.user.groups.add(default_group)
+        try:
+            default_group = Group.objects.get(name='Usuario')
+            self.user.groups.add(default_group)
+        except:
+            pass
         
         return models.Model.save(self, force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
