@@ -2,7 +2,7 @@ from orderproject.settings import INSTALLED_APPS
 
 
 # allauth
-INSTALLED_APPS += (
+ALLAUTH_PROVIDERS += (
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
 )

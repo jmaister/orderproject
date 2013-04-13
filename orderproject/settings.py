@@ -1,6 +1,9 @@
 # Django settings for orderproject project.
 
 import os
+from orderproject.prod_settings import *
+
+
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 DEBUG = True
@@ -209,13 +212,15 @@ AUTH_PROFILE_MODULE = 'order.UserProfile'
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_SIGNUP_FORM_CLASS = 'orderproject.forms.SignupForm'
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_AUTO_SIGNUP = False
+
 
 LOGIN_REDIRECT_URL = '/'
 
 
 try:
-    from prod_settings import *
+    INSTALLED_APPS += ALLAUTH_PROVIDERS
 except ImportError:
     pass
