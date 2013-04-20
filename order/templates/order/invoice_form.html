@@ -1,39 +1,89 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% load formsettags %}
 
 {% block scripts %}
-<script type="text/javascript" src="/static/jquery.formset.js"></script>
+<script type="text/javascript" src="{% static "jquery.formset.js" %}"></script>
 <script type="text/javascript">
     $(function() {
-        $('.InvoiceItemLine').formset({
+        $('.InvoiceItemInline').formset({
             prefix : '{{ InvoiceItemInline.prefix }}'
         });
     });
     
     $('#id_date, #id_date_paid').datepicker({dateFormat: 'dd/mm/yy'});
 </script>
+<script type="text/javascript" src="{% static "js/invoice.js" %}"></script>
 {% endblock %}
 
 {% block content %}
-<form method='post' action='{{request.path}}' id="form">
+<form method='post' action='{{request.path}}' id="invoice_form">
     {% csrf_token %}
     <fieldset>
         <legend>
-            Factura
+            Invoice
         </legend>
 
-        <b>Factura Form:</b>
+        <b>Invoice Form:</b>
         <br/>
         {{ form }}
         <br/>
         <br/>
 
-        <b>Factura Items Form:</b>
+        <b>Invoice Items Form:</b>
         <br/>
 
-        {% formset_table_bootstrap InvoiceItemInline 'InvoiceItemLine' %}
+
+        <style type="text/css" media="screen">
+            table p {
+                border: 1px solid red;
+            }
+            
+            td.numberfield {
+                text-align: right;
+            }
+        </style>
+
+        
+        <fieldset class="module aligned ">
+        <table class="table">
+             <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Tax Name</th>
+                <th>Tax Rate</th>
+                <th>Base</th>
+                <th>Taxes</th>
+                <th>Total</th>
+                <th>Eliminar</th>
+             </tr>
+             {{ InvoiceItemInline.management_form }}
+             {% for f in InvoiceItemInline %}
+                  <tr class="InvoiceItemInline" id="id_{{ InvoiceItemInline.prefix }}-{{forloop.counter0}}">
+                      <td>{{f.id}}{{f.product}}</td>
+                      <td>{{f.price}}</td>
+                      <td>{{f.quantity}}</td>
+                      <td class="field-taxname"><p>{{f.tax_name.value}}</p></td>
+                      <td class="numberfield field-taxrate"><p>{{f.tax_rate.value}}</p></td>
+                      <td class="numberfield field-base"><p>{{f.base.value}}</p></td>
+                      <td class="numberfield field-taxes"><p>{{f.taxes.value}}</p></td>
+                      <td class="numberfield field-total"><p>{{f.total.value}}</p></td>
+                      <td>{{f.DELETE}}</td>
+                  </tr>
+             {% endfor %}
+        </table>
+        </fieldset>
+
+
+
+
+
 
         {% comment %}
+        {% formset_table_bootstrap InvoiceItemInline 'InvoiceItemLine' %}
+        
+        
         {{InvoiceItemInline.management_form}}
         {% for fs in InvoiceItemInline %}
         <div class="line">

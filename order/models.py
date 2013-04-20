@@ -71,11 +71,11 @@ class InvoiceItem(BaseModel):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.DecimalField(max_digits=10, decimal_places=0)
 
-    base = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
-    tax_name = models.CharField(max_length=500, default='', editable=False)
-    tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0, editable=False)
-    taxes = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
-    total = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
+    base = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    tax_name = models.CharField(max_length=500, default='')
+    tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    taxes = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def get_absolute_url(self):
         return None
