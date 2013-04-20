@@ -1,0 +1,7 @@
+table p {
+    border: 1px solid red;
+}
+
+td.numberfield {
+    text-align: right;
+}

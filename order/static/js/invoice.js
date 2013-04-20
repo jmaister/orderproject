@@ -12,21 +12,29 @@ var fmt = function(n, dec) {
 
 
 
+var updateProduct = function(row) {
+	var product_id = $("#id_invoiceitem_set-"+ row +"-product").val();
+	if (product_id) {
+	    $.getJSON("/order/json/product/"+ product_id +"/", null, function(data) {
+	        var price = data[0]["fields"]["price"];
+	        var tax = data[0]["fields"]["tax"];
+	        $("input#id_invoiceitem_set-"+row+"-price").val(price);
+	        $.getJSON("/order/json/tax/"+ tax + "/", null, function(data) {
+	            $("tr#id_invoiceitem_set-"+row+" td.field-taxname p").html(data[0].fields.name);
+	            $("tr#id_invoiceitem_set-"+row+" td.field-taxrate p").html(data[0].fields.rate);
+	            update_invoice_row(row);
+	        });
+	    });
+	}
+};
+
+
 $(document).ready(function() {
     $("#invoice_form").delegate("[id$=-product]", "change", function() {
         var row = $(this).attr("id").split('id_invoiceitem_set-')[1].split("-product")[0];
         var product_id = $(this).val();
         if (product_id) {
-            $.getJSON("/order/json/product/"+ product_id +"/", null, function(data) {
-                var price = data[0]["fields"]["price"];
-                var tax = data[0]["fields"]["tax"];
-                $("input#id_invoiceitem_set-"+row+"-price").val(price);
-                $.getJSON("/order/json/tax/"+ tax + "/", null, function(data) {
-	                $("tr#id_invoiceitem_set-"+row+" td.field-taxname p").html(data[0].fields.name);
-	                $("tr#id_invoiceitem_set-"+row+" td.field-taxrate p").html(data[0].fields.rate);
-	                update_invoice_row(row);
-                });
-            });
+        	updateProduct(row);
         } else {
             $("input#id_invoiceitem_set-"+row+"-price").val('');
             $("tr#id_invoiceitem_set-"+row+" td.field-tax p").html('0.00');
@@ -71,9 +79,9 @@ function update_invoice_row(row) {
     var ti = b * parse(taxrate.html()) / 100.0;
 
 
-	base.html(fmt(b));
-	taxes.html(fmt(ti));
-    total.html(fmt(b + ti));
+	base.html(fmt(b, 2));
+	taxes.html(fmt(ti, 2));
+    total.html(fmt(b + ti, 2));
 
     sumRows("base", "base");
     sumRows("taxes", "taxes");
@@ -95,6 +103,7 @@ var sumRows = function(fromField, toField) {
 var update_all = function() {
     var numrows = $('#id_invoiceitem_set-TOTAL_FORMS').val();
     for (var i=0;i<numrows;i++) {
-        update_invoice_row(i);
+    	updateProduct(i);
+    	update_invoice_row(i);
     }
 };

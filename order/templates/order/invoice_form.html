@@ -2,6 +2,12 @@
 {% load staticfiles %}
 {% load formsettags %}
 
+
+{% block styles %}
+    <link href="{% static "css/invoice.css" %}" rel="stylesheet">
+{% endblock %}
+
+
 {% block scripts %}
 <script type="text/javascript" src="{% static "jquery.formset.js" %}"></script>
 <script type="text/javascript">
@@ -34,17 +40,6 @@
         <br/>
 
 
-        <style type="text/css" media="screen">
-            table p {
-                border: 1px solid red;
-            }
-            
-            td.numberfield {
-                text-align: right;
-            }
-        </style>
-
-        
         <fieldset class="module aligned ">
         <table class="table">
              <tr>
@@ -61,9 +56,10 @@
              {{ InvoiceItemInline.management_form }}
              {% for f in InvoiceItemInline %}
                   <tr class="InvoiceItemInline" id="id_{{ InvoiceItemInline.prefix }}-{{forloop.counter0}}">
-                      <td>{{f.id}}{{f.product}}</td>
-                      <td>{{f.price}}</td>
-                      <td>{{f.quantity}}</td>
+                      <td>{{f.id}}
+                          {{f.product.errors.as_ul}}{{f.product}}</td>
+                      <td>{{f.price.errors.as_ul}}{{f.price}}</td>
+                      <td>{{f.quantity.errors.as_ul}}{{f.quantity}}</td>
                       <td class="field-taxname"><p>{{f.tax_name.value}}</p></td>
                       <td class="numberfield field-taxrate"><p>{{f.tax_rate.value}}</p></td>
                       <td class="numberfield field-base"><p>{{f.base.value}}</p></td>
