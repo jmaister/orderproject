@@ -3,7 +3,6 @@
 import os
 from orderproject.prod_settings import *
 
-
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 DEBUG = True
@@ -121,6 +120,14 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'django_admin_bootstrapped',
+
+    # Uncomment the next line to enable the admin:
+    'django.contrib.admin',
+    # Uncomment the next line to enable admin documentation:
+    # 'django.contrib.admindocs',
+
+    'base',
     'order',
     'orderproject',
 
@@ -143,13 +150,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'django_admin_bootstrapped',
-
-    # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
 
     'django.contrib.messages',
     'django.contrib.humanize',

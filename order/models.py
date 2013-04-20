@@ -3,88 +3,106 @@ from decimal import Decimal
 from django.contrib.auth.models import User, Group
 from django.db import models
 from django.db.models.signals import post_save
+from django.core.urlresolvers import reverse
 
-class Empresa(BaseEntity):
-    direccion = models.TextField()
-    nif = models.CharField(max_length=20)
 
-class Iva(BaseEntity):
-    tipo = models.DecimalField(max_digits=5, decimal_places=2)
-    
-class Producto(BaseEntity):
-    desc_imprimir = models.CharField(max_length=50, verbose_name="Nombre para imprimir")
-    empresa = models.ForeignKey(Empresa)
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
-    iva = models.ForeignKey(Iva)
-    
+class Company(BaseEntity):
+    address = models.TextField()
+    id_number = models.CharField(max_length=20)
+
+
+class Tax(BaseEntity):
+    rate = models.DecimalField(max_digits=5, decimal_places=2)
+
+
+class Product(BaseEntity):
+    print_name = models.CharField(max_length=50)
+    company = models.ForeignKey(Company)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    tax = models.ForeignKey(Tax)
+
+
+class Client(BaseEntity):
+    company = models.ForeignKey(Company)
+    address = models.TextField()
+    id_number = models.CharField(max_length=20)
+
+
+class Invoice(BaseModel):
+    company = models.ForeignKey(Company)
+    code = models.CharField(max_length=50)
+    date = models.DateField()
+    client = models.ForeignKey(Client)
+    date_paid = models.DateField(blank=True, null=True)
+
+    base = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
+    taxes = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
+
     def get_absolute_url(self):
-        return 'order/producto/%d/' % (self.pk)
-
-class Cliente(BaseEntity):
-    empresa = models.ForeignKey(Empresa)
-    direccion = models.TextField()
-    nif = models.CharField(max_length=20)
-
-class Factura(BaseModel):
-    empresa = models.ForeignKey(Empresa)
-    codigo = models.CharField(max_length=50)
-    fecha = models.DateField()
-    cliente = models.ForeignKey(Cliente)
-    total_iva = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    base = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    fecha_pagado = models.DateField(blank=True, null=True)
+        return reverse('invoice_edit', args=[self.id])
 
     def calculate(self):
-        sum_total_iva = 0
         sum_base = 0
+        sum_taxes = 0
         sum_total = 0
-        for factura_item in self.facturaitem_set.all():
-            factura_item.calculate()
-            sum_total_iva += factura_item.total_iva
-            sum_base += factura_item.base
-            sum_total += factura_item.total
-            factura_item.save()
+        for invoice_item in self.invoiceitem_set.all():
+            sum_base += invoice_item.base
+            sum_taxes += invoice_item.taxes
+            sum_total += invoice_item.total
             
-        self.total_iva = sum_total_iva
         self.base = sum_base
+        self.taxes = sum_taxes
         self.total = sum_total
+    
+    def save(self, force_insert=False, force_update=False, using=None,
+        update_fields=None):
+        self.calculate()
+        return BaseModel.save(self, force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
     def __unicode__(self):
-        return "[" + str(self.id) + "][" + str(self.fecha) + "] " + self.cliente.name
+        return "[" + str(self.id) + "][" + str(self.date) + "] " + self.client.name
 
-class FacturaItem(BaseModel):
-    factura = models.ForeignKey(Factura)
-    producto = models.ForeignKey(Producto)
 
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
-    cantidad = models.DecimalField(max_digits=10, decimal_places=0)
+class InvoiceItem(BaseModel):
+    invoice = models.ForeignKey(Invoice)
+    product = models.ForeignKey(Product)
 
-    tipo_iva = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    total_iva = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    base = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.DecimalField(max_digits=10, decimal_places=0)
+
+    base = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
+    tax_name = models.CharField(max_length=500, default='', editable=False)
+    tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0, editable=False)
+    taxes = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
 
     def get_absolute_url(self):
         return None
 
     def calculate(self):
-        if self.tipo_iva is None or self.tipo_iva == 0:
-            self.tipo_iva = self.producto.iva.tipo
+        # Change to multiple taxes
+        if self.tax_rate is None or self.tax_rate == 0:
+            self.tax_name = self.product.tax.name
+            self.tax_rate = self.product.tax.rate
             
-        self.base = (self.precio * self.cantidad)
-        self.total_iva = (self.base * self.tipo_iva / Decimal(100.0))
-        self.total = self.base + self.total_iva
+        self.base = (self.price * self.quantity)
+        self.taxes = (self.base * self.tax_rate / Decimal(100.0))
+        self.total = self.base + self.taxes
 
+    def save(self, force_insert=False, force_update=False, using=None,
+        update_fields=None):
+        self.calculate()
+        return BaseModel.save(self, force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
 class UserProfile(models.Model):
     # This field is required.
-    #user = models.OneToOneField(User)
-    #user = models.ForeignKey(User, unique=True)
+    # user = models.OneToOneField(User)
+    # user = models.ForeignKey(User, unique=True)
     user = models.OneToOneField(User, unique=True, primary_key=True, related_name="user")
 
     # Other fields here
-    empresa = models.ForeignKey(Empresa, null=True)
+    company = models.ForeignKey(Company, null=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         # Default group with default perms
@@ -96,9 +114,10 @@ class UserProfile(models.Model):
         
         return models.Model.save(self, force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
+
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        #UserProfile.objects.get_or_create(user=instance)
+        # UserProfile.objects.get_or_create(user=instance)
         profile = UserProfile(user=instance)
         profile.save()
     

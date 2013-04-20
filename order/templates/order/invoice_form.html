@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load formsettags %}
+
+{% block scripts %}
+<script type="text/javascript" src="/static/jquery.formset.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $('.InvoiceItemLine').formset({
+            prefix : '{{ InvoiceItemInline.prefix }}'
+        });
+    });
+    
+    $('#id_date, #id_date_paid').datepicker({dateFormat: 'dd/mm/yy'});
+</script>
+{% endblock %}
+
+{% block content %}
+<form method='post' action='{{request.path}}' id="form">
+    {% csrf_token %}
+    <fieldset>
+        <legend>
+            Factura
+        </legend>
+
+        <b>Factura Form:</b>
+        <br/>
+        {{ form }}
+        <br/>
+        <br/>
+
+        <b>Factura Items Form:</b>
+        <br/>
+
+        {% formset_table_bootstrap InvoiceItemInline 'InvoiceItemLine' %}
+
+        {% comment %}
+        {{InvoiceItemInline.management_form}}
+        {% for fs in InvoiceItemInline %}
+        <div class="line">
+            <span> {% for field in fs %} <span>{{ field.label_tag }}: {{field}}</span> {% endfor %}
+        </div>
+        <div>
+            {{fs.errors}}
+        </div>
+        {% endfor %}
+        {% endcomment %}
+
+    </fieldset>
+    <input title='Submit this form' type='submit' name='submit' value='Submit' />
+</form>
+{% endblock %}
+

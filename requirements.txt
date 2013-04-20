@@ -1,3 +1,5 @@
 Django==1.5.1
 django-admin-bootstrapped==0.3.2
 django-allauth==0.10.0
+django-debug-toolbar==0.9.4
+django-extra-views==0.6.2
