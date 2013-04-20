@@ -51,7 +51,7 @@ class InvoiceUpdateView(NamedFormsetsMixin, UpdateWithInlinesView):
             self.object.company = self.request.user.get_profile().company
 
         # Save object to recalculate totals
-        out = CreateWithInlinesView.forms_valid(self, form, inlines)
+        out = UpdateWithInlinesView.forms_valid(self, form, inlines)
         self.object.save()
         return out
 
