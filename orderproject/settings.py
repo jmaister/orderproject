@@ -1,7 +1,6 @@
 # Django settings for orderproject project.
 
 import os
-from orderproject.prod_settings import *
 
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -221,6 +220,7 @@ LOGIN_REDIRECT_URL = '/'
 
 
 try:
+    from orderproject.prod_settings import *
     INSTALLED_APPS += ALLAUTH_PROVIDERS
 except ImportError:
     pass
