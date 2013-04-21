@@ -13,7 +13,11 @@
 <script type="text/javascript">
     $(function() {
         $('.InvoiceItemInline').formset({
-            prefix : '{{ InvoiceItemInline.prefix }}'
+            prefix : '{{ InvoiceItemInline.prefix }}',
+            added: function(newrow) {
+                var new_row_id = $('input#id_' +this.prefix + '-TOTAL_FORMS').val() - 1;
+                $(newrow).attr('id', 'id_'+ this.prefix + '-' + new_row_id);
+            }
         });
     });
     

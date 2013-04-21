@@ -12,7 +12,7 @@ var fmt = function(n, dec) {
 
 
 var price = function(row, val) {
-	var input = $("input#id_invoiceitem_set-"+row+"-price");
+    var input = $("input#id_invoiceitem_set-"+row+"-price");
 	if (val !== undefined) {
 		input.val(val);
 	}
@@ -41,7 +41,7 @@ var taxrate = function(row, val) {
 
 
 var updateProduct = function(row) {
-	var product_id = $("#id_invoiceitem_set-"+ row +"-product").val();
+	var product_id = $("select#id_invoiceitem_set-"+ row +"-product").val();
 	if (product_id) {
 	    $.getJSON("/order/json/product/"+ product_id +"/", null, function(data) {
 	        price(row, data[0]["fields"]["price"]);
@@ -59,7 +59,7 @@ var updateProduct = function(row) {
 
 $(document).ready(function() {
     $("#invoice_form").delegate("[id$=-product]", "change", function() {
-        var row = $(this).attr("name").split('-')[1];
+        var row = $(this).attr("id").split('-')[1];
         var product_id = $(this).val();
         if (product_id) {
         	updateProduct(row);
