@@ -72,8 +72,8 @@ class InvoiceItem(BaseModel):
     quantity = models.DecimalField(max_digits=10, decimal_places=0)
 
     base = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
-    tax_name = models.CharField(max_length=500, default='', editable=False)
-    tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0, editable=False)
+    tax_name = models.CharField(max_length=500)
+    tax_rate = models.DecimalField(max_digits=5, decimal_places=2)
     taxes = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
 

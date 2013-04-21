@@ -11,19 +11,47 @@ var fmt = function(n, dec) {
 };
 
 
+var price = function(row, val) {
+	var input = $("input#id_invoiceitem_set-"+row+"-price");
+	if (val !== undefined) {
+		input.val(val);
+	}
+	return input.val();
+};
+
+var taxname = function(row, val) {
+	var input = $("input#id_invoiceitem_set-"+row+"-tax_name");
+	if (val !== undefined) {
+		input.val(val);
+        var p = $("tr#id_invoiceitem_set-"+row+" td.field-taxname p");
+        p.html(val);
+	}
+	return input.val();
+};
+
+var taxrate = function(row, val) {
+	var input = $("input#id_invoiceitem_set-"+row+"-tax_rate");
+	if (val !== undefined) {
+		input.val(val);
+        var p = $("tr#id_invoiceitem_set-"+row+" td.field-taxrate p");
+        p.html(val);
+	}
+	return input.val();
+};
+
 
 var updateProduct = function(row) {
 	var product_id = $("#id_invoiceitem_set-"+ row +"-product").val();
 	if (product_id) {
 	    $.getJSON("/order/json/product/"+ product_id +"/", null, function(data) {
-	        var price = data[0]["fields"]["price"];
-	        var tax = data[0]["fields"]["tax"];
-	        $("input#id_invoiceitem_set-"+row+"-price").val(price);
+	        price(row, data[0]["fields"]["price"]);
+
+            var tax = data[0]["fields"]["tax"];
 	        $.getJSON("/order/json/tax/"+ tax + "/", null, function(data) {
-	            $("tr#id_invoiceitem_set-"+row+" td.field-taxname p").html(data[0].fields.name);
-	            $("tr#id_invoiceitem_set-"+row+" td.field-taxrate p").html(data[0].fields.rate);
+	        	taxname(row, data[0].fields.name);
+                taxrate(row, data[0].fields.rate);
 	            update_invoice_row(row);
-	        });
+	    	});
 	    });
 	}
 };
@@ -31,13 +59,14 @@ var updateProduct = function(row) {
 
 $(document).ready(function() {
     $("#invoice_form").delegate("[id$=-product]", "change", function() {
-        var row = $(this).attr("id").split('id_invoiceitem_set-')[1].split("-product")[0];
+        var row = $(this).attr("name").split('-')[1];
         var product_id = $(this).val();
         if (product_id) {
         	updateProduct(row);
         } else {
-            $("input#id_invoiceitem_set-"+row+"-price").val('');
-            $("tr#id_invoiceitem_set-"+row+" td.field-tax p").html('0.00');
+            price(row, '');
+            taxname(row, '');
+            taxrate(row, '');
             update_invoice_row(row);
         }
     });
@@ -59,29 +88,31 @@ $(document).ready(function() {
 
 
 function update_invoice_row(row) {
-    if (!$("select#id_invoiceitem_set-"+row+"-product").val()) {
-        return;
-    }
-    
     var rowid = "tr#id_invoiceitem_set-"+ row;
 
-    var price = $("input#id_invoiceitem_set-"+row+"-price");
-    var quantity = $("input#id_invoiceitem_set-"+row+"-quantity");
-    var taxrate = $(rowid +" td.field-taxrate p");
     var taxes = $(rowid +" td.field-taxes p");
     var base = $(rowid +" td.field-base p");
     var total = $(rowid +" td.field-total p");
 
-    if (!quantity.val()) {
-        quantity.val(1);
+    if (!$("select#id_invoiceitem_set-"+row+"-product").val()) {
+        base.html('');
+        taxes.html('');
+        total.html('');
+    } else {
+        var price = $("input#id_invoiceitem_set-"+row+"-price");
+        var quantity = $("input#id_invoiceitem_set-"+row+"-quantity");
+        var taxrate = $(rowid +" td.field-taxrate p");
+    
+        if (!quantity.val()) {
+            quantity.val(1);
+        }
+        var b = quantity.val() * price.val();
+        var ti = b * parse(taxrate.html()) / 100.0;
+
+        base.html(fmt(b, 2));
+        taxes.html(fmt(ti, 2));
+        total.html(fmt(b + ti, 2));
     }
-    var b = quantity.val() * price.val();
-    var ti = b * parse(taxrate.html()) / 100.0;
-
-
-	base.html(fmt(b, 2));
-	taxes.html(fmt(ti, 2));
-    total.html(fmt(b + ti, 2));
 
     sumRows("base", "base");
     sumRows("taxes", "taxes");
@@ -103,7 +134,6 @@ var sumRows = function(fromField, toField) {
 var update_all = function() {
     var numrows = $('#id_invoiceitem_set-TOTAL_FORMS').val();
     for (var i=0;i<numrows;i++) {
-    	updateProduct(i);
     	update_invoice_row(i);
     }
 };

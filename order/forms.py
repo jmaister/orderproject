@@ -25,11 +25,6 @@ class InvoiceCreateView(NamedFormsetsMixin, CreateWithInlinesView):
     inlines_names = ['InvoiceItemInline']
     template_name = 'order.html'
 
-    def get_context_data(self, **kwargs):
-        ctx = NamedFormsetsMixin.get_context_data(self, **kwargs)
-        ctx['taxes'] = Tax.objects.all()
-        return ctx
-
     @transaction.commit_on_success
     def forms_valid(self, form, inlines):
         # Default company
