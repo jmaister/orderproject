@@ -48,28 +48,36 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">{% block brand %}*Brand*{% endblock %}</a>
+          <a class="brand" href="/">{% block brand %}*Brand*{% endblock %}</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/liga/">Inicio</a></li>
+              <li class="active"><a href="/">Home</a></li>
               <!--
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
               -->
             </ul>
             <ul class="nav pull-right">
-              user:{{user}},auth:{{user.is_authenticated}},cuenta:{%if user.cuenta%}{{user.cuenta}}{%endif%}
+              user:{{user}},auth:{{user.is_authenticated}}
 
               {% if user.is_staff %}
               <li><a href="/admin/">Admin</a></li>
               {% endif %}
-                
+
               {% if user.is_authenticated %}
-              <li><a href="{{user.cuenta.get_absolute_url }}" class="navbar-link">Usuario [{{ user }}]</a></li>
-              <li><a href="/accounts/logout/">Cerrar sesión</a></li>
+              <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">User [{{user}}]<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="/accounts/email/">Email</a></li>
+                    <li><a href="/accounts/social/connections/">Social</a></li>
+                    <li><a href="/accounts/password/change/">Password</a></li>
+                </ul>
+              </li>
+              
+              <li><a href="/accounts/logout/">Logout</a></li>
               {% else %}
               <li><a href="/accounts/login/" class="navbar-link">Login</a></li>
-              <li><a href="/accounts/signup/">Crear cuenta</a></li>
+              <li><a href="/accounts/signup/">Create account</a></li>
               {% endif %}
             </ul>
           </div>

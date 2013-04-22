@@ -1,47 +1,10 @@
-{% extends "admin/base.html" %}
-{% load i18n %}
+{% extends 'base_bootstrap.html'  %}
 
-{% block title %}Factuweb | {{ title }}{% endblock %}
 
-{% block branding %}
-          <a class="brand" href="#">Factuweb</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="active"><a href="/">Inicio</a></li>
-              {% if user.is_authenticated and user.is_staff %}
-              <li class="dropdown">
-                  <a href="#" data-toggle="dropdown" class="dropdown-toggle">Configuración<b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                        {% if user.is_staff %}
-                            <li><a href="/admin/">Admin</a></li>
-                        {% endif %}
-                  </ul>
-              </li>
-              {% endif %}
-            </ul>
-            <ul class="nav pull-right">
-              {% if user.is_authenticated %}
-              <li class="dropdown">
-                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Bienvenido/a {{user}}<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="/accounts/email/">Email</a></li>
-                    <li><a href="/accounts/social/connections/">Social</a></li>
-                    <li><a href="/accounts/social/change/">Password</a></li>
-                </ul>
-              </li>
-              <li><a href="/accounts/logout/">Cerrar sesión</a></li>
-              {% else %}
-              <li><a href="/accounts/login/" class="navbar-link">Login</a></li>
-              <li><a href="/accounts/signup/">Crear cuenta</a></li>
-              {% endif %}
-            </ul>
-          </div>
+{% block brand %}
+    InvoicesApp
 {% endblock %}
 
-
-{% block extrastyle %}
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.1/united/bootstrap.min.css" rel="stylesheet">
+{% block head_title %}
+    Invoice
 {% endblock %}
-
-{% block nav-global %}{% endblock %}

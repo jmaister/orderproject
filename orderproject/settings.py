@@ -6,6 +6,7 @@ PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+ENABLE_DEBUG_TOOLBAR = False
 
 
 ADMINS = (
@@ -127,8 +128,8 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 
     'base',
-    'order',
     'orderproject',
+    'order',
 
     # django-allauth
     'allauth',
@@ -224,3 +225,13 @@ try:
     INSTALLED_APPS += ALLAUTH_PROVIDERS
 except ImportError:
     pass
+
+
+if ENABLE_DEBUG_TOOLBAR:
+    INTERNAL_IPS = ('127.0.0.1',)
+    MIDDLEWARE_CLASSES += (
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
+    INSTALLED_APPS += (
+        'debug_toolbar',
+    )
