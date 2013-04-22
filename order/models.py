@@ -14,6 +14,9 @@ class Company(BaseEntity):
 class Tax(BaseEntity):
     rate = models.DecimalField(max_digits=5, decimal_places=2)
 
+    def get_absolute_url(self):
+        return reverse('tax_edit', args=[self.id])
+
 
 class Product(BaseEntity):
     print_name = models.CharField(max_length=50)
@@ -21,11 +24,17 @@ class Product(BaseEntity):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     tax = models.ForeignKey(Tax)
 
+    def get_absolute_url(self):
+        return reverse('product_edit', args=[self.id])
+
 
 class Client(BaseEntity):
     company = models.ForeignKey(Company)
     address = models.TextField()
     id_number = models.CharField(max_length=20)
+
+    def get_absolute_url(self):
+        return reverse('client_edit', args=[self.id])
 
 
 class Invoice(BaseModel):

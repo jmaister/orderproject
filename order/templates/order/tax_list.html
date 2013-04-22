@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Tax Types</h2>
+<a class="btn" href="{% url 'tax_create' %}">New Tax Type</a>
+<table class="table">
+    <tr>
+        <th>Name</th><th>Rate</th>
+    </tr>
+    {% for tax in object_list %}
+    <tr>
+        <td><a class="btn" href="{% url 'tax_edit' tax.id %}">{{tax.name}}</a></td>
+        <td>{{tax.rate}}</td>
+    </tr>
+    {% endfor %}
+</table>
+</ul>
+{% endblock %}

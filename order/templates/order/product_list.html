@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Products</h2>
+<a class="btn" href="{% url 'product_create' %}">New Product</a>
+<table class="table">
+    <tr>
+        <th>Name</th><th>Price</th><th>Tax</th>
+    </tr>
+    {% for product in object_list %}
+    <tr>
+        <td><a class="btn" href="{% url 'product_edit' product.id %}">{{product.name}}</a></td>
+        <td>{{product.price}}</td>
+        <td>{{product.tax.name}}, {{product.tax.rate}}%</td>
+    </tr>
+    {% endfor %}
+</table>
+</ul>
+{% endblock %}

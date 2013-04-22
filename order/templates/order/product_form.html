@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load formsettags %}
+
+{% block styles %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+<form method='post' action='{{request.path}}' id="product_form">
+    {% csrf_token %}
+    <fieldset>
+        <legend>
+            Product
+        </legend>
+        
+        {{form}}
+
+    </fieldset>
+    <input class="btn" title='Submit this form' type='submit' name='submit' value='Submit' />
+    <a class="btn" href="{% url 'product_list' %}">Cancel</a>
+</form>
+{% endblock %}
+
