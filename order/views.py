@@ -28,3 +28,4 @@ def print_order(request, invoice_id):
          }
         ))
     return HttpResponse(html)    
+
