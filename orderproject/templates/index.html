@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Index
+{% endblock %}
+
+{% block content %}
+<div class="hero-unit">
+    <h1>InvoiceApp</h1>
+    <p>
+        Easy online invoices
+    </p>
+</div>
+
+<ul class="thumbnails">
+    <li class="span2">
+        <div id="name" class="thumbnail">
+            <a href="{% url 'invoice_list' %}">Invoices</a>
+        </div>
+    </li>
+    <li class="span2">
+        <a href="{% url 'product_list' %}" class="thumbnail">Products</a>
+    </li>
+    <li class="span2">
+        <a href="{% url 'client_list' %}" class="thumbnail">Clients</a>
+    </li>
+    <li class="span2">
+        <a href="{% url 'tax_list' %}" class="thumbnail">Tax types</a>
+    </li>
+</ul>
+
+{% endblock %}

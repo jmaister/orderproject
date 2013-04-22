@@ -1,13 +1,13 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from orderproject.views import home
+from django.views.generic.base import TemplateView
 
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
 
-    url(r'^$', home, name='home'),
+    url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
 
     url(r'^order/', include('order.urls')),
 
