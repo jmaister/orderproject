@@ -38,6 +38,10 @@
         <br/>
         {{ form }}
         <br/>
+        Base: <span id="base">{{form.base.value}}</span>
+        Taxes: <span id="taxes"></span>
+        Total: <span id="total"></span>
+        <br/>
         <br/>
 
         <b>Invoice Items Form:</b>
@@ -64,17 +68,17 @@
                           {{f.product.errors.as_ul}}{{f.product}}</td>
                       <td>{{f.price.errors.as_ul}}{{f.price}}</td>
                       <td>{{f.quantity.errors.as_ul}}{{f.quantity}}</td>
-                      <td class="field-taxname">
-                          <p>{{f.tax_name.value|default_if_none:''}}</p>
+                      <td class="field-tax_name">
+                          <span>{{f.tax_name.value|default_if_none:''}}</span>
                           {{f.tax_name.as_hidden}}
                       </td>
-                      <td class="numberfield field-taxrate">
-                          <p>{{f.tax_rate.value|default_if_none:''}}</p>
+                      <td class="numberfield field-tax_rate">
+                          <span>{{f.tax_rate.value|default_if_none:''}}</span>
                           {{f.tax_rate.as_hidden}}
                       </td>
-                      <td class="numberfield field-base"><p>{{f.base.value}}</p></td>
-                      <td class="numberfield field-taxes"><p>{{f.taxes.value}}</p></td>
-                      <td class="numberfield field-total"><p>{{f.total.value}}</p></td>
+                      <td class="numberfield field-base"><span>{{f.base.value}}</span></td>
+                      <td class="numberfield field-taxes"><span>{{f.taxes.value}}</span></td>
+                      <td class="numberfield field-total"><span>{{f.total.value}}</span></td>
                       <td>{{f.DELETE}}</td>
                   </tr>
              {% endfor %}

@@ -1,15 +1,34 @@
 
 var parse = function(n) {
-    if (n != undefined) {
+    if (n == '') {
+        return 0; 
+    } else if (n == null) {
+        return null;
+    } else if (n !== undefined) {
     	n = n.replace(',', '');
     	return parseFloat(n)
 	}
 	return null;
 };
 var fmt = function(n, dec) {
-	return n.toFixed(dec);
+    if (dec === undefined) {
+        dec = 2;
+    }
+	return addCommas(n.toFixed(dec));
 };
 
+
+var addCommas = function(nStr){
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
 
 var price = function(row, val) {
     var input = $("input#id_invoiceitem_set-"+row+"-price");
@@ -19,21 +38,21 @@ var price = function(row, val) {
 	return input.val();
 };
 
-var taxname = function(row, val) {
+var tax_name = function(row, val) {
 	var input = $("input#id_invoiceitem_set-"+row+"-tax_name");
 	if (val !== undefined) {
 		input.val(val);
-        var p = $("tr#id_invoiceitem_set-"+row+" td.field-taxname p");
+        var p = $("tr#id_invoiceitem_set-"+row+" td.field-tax_name span");
         p.html(val);
 	}
 	return input.val();
 };
 
-var taxrate = function(row, val) {
+var tax_rate = function(row, val) {
 	var input = $("input#id_invoiceitem_set-"+row+"-tax_rate");
 	if (val !== undefined) {
 		input.val(val);
-        var p = $("tr#id_invoiceitem_set-"+row+" td.field-taxrate p");
+        var p = $("tr#id_invoiceitem_set-"+row+" td.field-tax_rate span");
         p.html(val);
 	}
 	return input.val();
@@ -48,8 +67,8 @@ var updateProduct = function(row) {
 
             var tax = data[0]["fields"]["tax"];
 	        $.getJSON("/order/json/tax/"+ tax + "/", null, function(data) {
-	        	taxname(row, data[0].fields.name);
-                taxrate(row, data[0].fields.rate);
+	        	tax_name(row, data[0].fields.name);
+                tax_rate(row, data[0].fields.rate);
 	            update_invoice_row(row);
 	    	});
 	    });
@@ -65,8 +84,8 @@ $(document).ready(function() {
         	updateProduct(row);
         } else {
             price(row, '');
-            taxname(row, '');
-            taxrate(row, '');
+            tax_name(row, '');
+            tax_rate(row, '');
             update_invoice_row(row);
         }
     });
@@ -90,9 +109,9 @@ $(document).ready(function() {
 function update_invoice_row(row) {
     var rowid = "tr#id_invoiceitem_set-"+ row;
 
-    var taxes = $(rowid +" td.field-taxes p");
-    var base = $(rowid +" td.field-base p");
-    var total = $(rowid +" td.field-total p");
+    var taxes = $(rowid +" td.field-taxes span");
+    var base = $(rowid +" td.field-base span");
+    var total = $(rowid +" td.field-total span");
 
     if (!$("select#id_invoiceitem_set-"+row+"-product").val()) {
         base.html('');
@@ -101,13 +120,13 @@ function update_invoice_row(row) {
     } else {
         var price = $("input#id_invoiceitem_set-"+row+"-price");
         var quantity = $("input#id_invoiceitem_set-"+row+"-quantity");
-        var taxrate = $(rowid +" td.field-taxrate p");
+        var tax_rate = $(rowid +" td.field-tax_rate span");
     
         if (!quantity.val()) {
             quantity.val(1);
         }
         var b = quantity.val() * price.val();
-        var ti = b * parse(taxrate.html()) / 100.0;
+        var ti = b * parse(tax_rate.html()) / 100.0;
 
         base.html(fmt(b, 2));
         taxes.html(fmt(ti, 2));
@@ -121,14 +140,14 @@ function update_invoice_row(row) {
 
 var sumRows = function(fromField, toField) {
     var sum = 0;
-    $("tr td.field-" + fromField + " p").each(function(index, el) {
+    $("tr td.field-" + fromField + " span").each(function(index, el) {
         var elValue = $(el).html().trim();
-        if (elValue != '(Nada)') {
-        	elValue = parse(elValue);
+    	elValue = parse(elValue);
+    	if (elValue != null) {
             sum = sum + elValue;
         }
     });
-    $("div.field-"+ toField + " p").html(fmt(sum));
+    $("#"+ toField).html(fmt(sum));
 };
 
 var update_all = function() {

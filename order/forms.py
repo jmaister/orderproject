@@ -2,7 +2,7 @@ from django import forms
 from django.db import transaction
 from extra_views.advanced import CreateWithInlinesView, InlineFormSet, \
     NamedFormsetsMixin, UpdateWithInlinesView
-from order.models import Invoice, InvoiceItem, Tax
+from order.models import Invoice, InvoiceItem
 
 
 class InvoiceForm(forms.ModelForm):
@@ -14,7 +14,7 @@ class InvoiceForm(forms.ModelForm):
 class InvoiceItemInline(InlineFormSet):
     model = InvoiceItem
     extra = 1
-
+    
 
 class InvoiceCreateView(NamedFormsetsMixin, CreateWithInlinesView):
     model = Invoice
@@ -23,7 +23,6 @@ class InvoiceCreateView(NamedFormsetsMixin, CreateWithInlinesView):
     context_object_name = 'invoice'
     inlines = [InvoiceItemInline]
     inlines_names = ['InvoiceItemInline']
-    template_name = 'order.html'
 
     @transaction.commit_on_success
     def forms_valid(self, form, inlines):
@@ -43,7 +42,6 @@ class InvoiceUpdateView(NamedFormsetsMixin, UpdateWithInlinesView):
     context_object_name = 'invoice'
     inlines = [InvoiceItemInline]
     inlines_names = ['InvoiceItemInline']
-    template_name = 'order.html'
 
     @transaction.commit_on_success
     def forms_valid(self, form, inlines):
