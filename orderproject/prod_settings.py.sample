@@ -12,6 +12,7 @@ ACCOUNT_USERNAME_MIN_LENGTH = 6
 
 
 # Email
+DEFAULT_FROM_EMAIL  = "" # needed
 EMAIL_SUBJECT_PREFIX = "[OrderProject] "
 EMAIL_HOST = "" # needed
 EMAIL_HOST_USER = "" # needed
