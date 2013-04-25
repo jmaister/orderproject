@@ -1,11 +1,11 @@
 OrderProject
 ============
 
-Django Project for Spanish invoicing of small business.
+Django Project for invoicing of business or entrepreneur.
 
 Spanish:
 
-Projecto DJango para facturación de pequeñas empresas en España.
+Projecto DJango para facturación de pequeñas empresas o autónomos.
 
 **Install**
 
@@ -18,3 +18,4 @@ Projecto DJango para facturación de pequeñas empresas en España.
 **Tags**
 
 [pymes, pyme, factura, facturación, España, Spain, empresa, empresas]
+[invoice, small, company, entrepreneur]
