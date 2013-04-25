@@ -14,6 +14,7 @@ from extra_views.advanced import NamedFormsetsMixin, CreateWithInlinesView, \
 
 from order.forms import InvoiceForm, InvoiceItemInline
 from order.models import Product, Invoice, InvoiceItem, Tax
+from django.views.generic.edit import CreateView, UpdateView
 
 
 @login_required
@@ -52,6 +53,17 @@ class CompanyFilterMixin(LoginRequiredMixin):
         return self.model.objects.filter(company=profile.company)
 
 
+class AddUserCompanyMixin(CompanyFilterMixin):
+    def _get_company(self):
+        return self.request.user.get_profile().company
+
+    @transaction.commit_on_success
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.company = self._get_company()
+        return super(AddUserCompanyMixin, self).form_valid(form)
+
+
 class ListViewByCompany(CompanyFilterMixin, ListView):
     pass
 
@@ -83,13 +95,16 @@ class InvoiceUpdateView(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
     inlines = [InvoiceItemInline]
     inlines_names = ['InvoiceItemInline']
 
+    def _get_company(self):
+        return self.request.user.get_profile().company
+
     def get_queryset(self):
-        company = self.request.user.get_profile().company
+        company = self._get_company()
         return self.model.objects.filter(company=company)
 
     def construct_inlines(self):
         # Only select the products on the company
-        qs = Product.objects.filter(company=self.request.user.get_profile().company)
+        qs = Product.objects.filter(company=self._get_company())
         inline_formsets = super(InvoiceUpdateView, self).construct_inlines()
         for form in inline_formsets[0].forms:
             form.fields['product'].queryset = qs 
@@ -99,10 +114,18 @@ class InvoiceUpdateView(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
     def forms_valid(self, form, inlines):
         # Default company
         if not self.object.company:
-            self.object.company = self.request.user.get_profile().company
+            self.object.company = self._get_company()
+
+        out = UpdateWithInlinesView.forms_valid(self, form, inlines)
 
         # Save object to recalculate totals
-        out = UpdateWithInlinesView.forms_valid(self, form, inlines)
         self.object.save()
         return out
 
+
+class CreateViewByCompany(AddUserCompanyMixin, CreateView):
+    pass
+
+
+class UpdateViewByCompany(AddUserCompanyMixin, UpdateView):
+    pass
