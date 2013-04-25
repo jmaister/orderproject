@@ -15,6 +15,7 @@ from extra_views.advanced import NamedFormsetsMixin, CreateWithInlinesView, \
 from order.forms import InvoiceForm, InvoiceItemInline
 from order.models import Product, Invoice, InvoiceItem, Tax
 from django.views.generic.edit import CreateView, UpdateView
+from django.contrib import messages
 
 
 @login_required
@@ -61,6 +62,7 @@ class AddUserCompanyMixin(CompanyFilterMixin):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.company = self._get_company()
+        messages.success(self.request, str(self.object) +" saved.")
         return super(AddUserCompanyMixin, self).form_valid(form)
 
 
@@ -84,6 +86,7 @@ class InvoiceCreateView(LoginRequiredMixin, NamedFormsetsMixin, CreateWithInline
         # Save object to recalculate totals
         out = CreateWithInlinesView.forms_valid(self, form, inlines)
         self.object.save()
+        messages.success(self.request, "Invoice %s saved." % (self.object.code, ))
         return out
 
 
@@ -120,6 +123,7 @@ class InvoiceUpdateView(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
 
         # Save object to recalculate totals
         self.object.save()
+        messages.success(self.request, "Invoice %s saved." % (self.object.code, ))
         return out
 
 
