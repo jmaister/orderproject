@@ -12,6 +12,7 @@ class Company(BaseEntity):
 
 
 class Tax(BaseEntity):
+    company = models.ForeignKey(Company)
     rate = models.DecimalField(max_digits=5, decimal_places=2)
 
     def get_absolute_url(self):
@@ -19,8 +20,8 @@ class Tax(BaseEntity):
 
 
 class Product(BaseEntity):
-    print_name = models.CharField(max_length=50)
     company = models.ForeignKey(Company)
+    print_name = models.CharField(max_length=50)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     tax = models.ForeignKey(Tax)
 
