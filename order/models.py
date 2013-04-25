@@ -73,6 +73,15 @@ class Invoice(BaseModel):
     def __unicode__(self):
         return "[" + str(self.id) + "][" + str(self.date) + "] " + self.client.name
 
+    def tax_map(self):
+        taxmap = {}
+        for invoice_item in self.invoiceitem_set.all():
+            group = invoice_item.tax_group()
+            if group in taxmap:
+                taxmap[group] += invoice_item.taxes
+            else:
+                taxmap[group] = invoice_item.taxes
+        return taxmap
 
 class InvoiceItem(BaseModel):
     invoice = models.ForeignKey(Invoice)
@@ -89,6 +98,12 @@ class InvoiceItem(BaseModel):
 
     def get_absolute_url(self):
         return None
+
+    def __unicode__(self):
+        return self.tax_name + ": " + str(self.tax_rate) + "%"
+
+    def tax_group(self):
+        return self.__unicode__()
 
     def calculate(self):
         # Change to multiple taxes

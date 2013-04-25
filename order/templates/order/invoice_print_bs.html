@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Invoice [{{ invoice.code }}]</title>
+
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+
+<style>
+</style>
+
+</head>
+
+<body>
+<h1 align="center">{{invoice.company.name}}</h1>
+
+<br>
+
+<table width="100%">
+<tr>
+  <td width="60%">&nbsp;</td>
+  <td width="40%">
+    {{invoice.company.address|linebreaks}}
+    <b>Company ID:</b> {{invoice.company.id_number}}<br>
+  </td>
+</table>
+<h1>INVOICE</h1>
+
+<br>
+
+<table width="100%" class="table table-bordered">
+<tr>
+<td width="50%">
+  <b>Client:</b><br>
+  {{invoice.client.name}}
+  {{invoice.client.address|linebreaks}}
+  <b>Client ID:</b> {{invoice.client.id_number}}<br>
+</td>
+<td width="50%">
+  <b>Invoice Number: [{{invoice.code}}]</b><br>
+  <br>
+  <br>
+  <b>Date: {{ invoice.date|date:"d-M-Y" }}</b><br>
+</td>
+</tr>
+</table>
+
+<br><br>
+
+<table width="100%" class="table table-bordered">
+<tr>
+  <th>Description</th>
+  <th>Quantity</th>
+  <th>Price</th>
+  <th>Net</th>
+  <th>Total</th>
+</tr>
+{% for invoice_item in invoiceitems %}
+  <tr>
+    <td>{{ invoice_item.product.print_name }}</td>
+    <td align="right">{{ invoice_item.quantity }}</td>
+    <td align="right">{{ invoice_item.price|floatformat:2 }}</td>
+    <td align="right">{{ invoice_item.base|floatformat:2 }}</td>
+    <td align="right">{{ invoice_item.total|floatformat:2 }}</td>
+  </tr>
+{% endfor %} 
+{% for x in blank_lines %}
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+{% endfor %} 
+</table>
+
+<br>
+
+<table width="100%" class="table table-bordered">
+<tr>
+  <th>Net</th>
+  <th>Taxes</th>
+  <th>Total Tax</th>
+  <th>Total Invoice</th>
+</tr>
+<tr>
+  <td align="center">{{ invoice.base|floatformat:2 }}</td>
+  <td align="center">
+      {% for key, value in invoice.tax_map.items %}
+          {{key}}: {{value}}<br/>
+      {% endfor %}
+  </td>
+  <td align="center">{{ invoice.taxes|floatformat:2 }}</td>
+  <td align="center">{{ invoice.total|floatformat:2 }}</td>
+</tr>
+</table>
+
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

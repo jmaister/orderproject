@@ -5,14 +5,15 @@
 <a class="btn" href="{% url 'invoice_create' %}">New Invoice</a>
 <table class="table">
     <tr>
-        <th>Code</th><th>Client</th><th>Total</th><th>Paid On</th>
+        <th>Code</th><th>Client</th><th>Total</th><th>Paid On</th><th><i class="icon-th"></i></th>
     </tr>
     {% for invoice in object_list %}
     <tr>
-        <td><a class="btn" href="{% url 'invoice_edit' invoice.code %}">{{invoice.code}}</a></td>
+        <td><a class="btn" href="{% url 'invoice_edit' invoice.id %}">{{invoice.code}}</a></td>
         <td>{{invoice.client}}</td>
         <td>{{invoice.total}}</td>
         <td>{{invoice.paid_date}}</td>
+        <td><a class="btn" target="_blank" href="{% url 'invoice_print' invoice.id %}">Print</a></td>
     </tr>
     {% endfor %}
 </table>

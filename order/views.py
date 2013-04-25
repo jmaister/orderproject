@@ -31,11 +31,11 @@ def json_tax(request, pk):
     return _json_view(request, Tax, pk)
 
 @login_required
-def print_order(request, invoice_id):
-    invoice = Invoice.objects.get(id=invoice_id)
-    invoiceitems = InvoiceItem.objects.select_related().filter(invoice_id=invoice_id)
+def print_invoice(request, pk):
+    invoice = Invoice.objects.get(id=pk)
+    invoiceitems = InvoiceItem.objects.select_related().filter(invoice_id=pk)
     
-    t = get_template('order_print_bs.html')
+    t = get_template('order/invoice_print_bs.html')
     html = t.render(Context(
         {'invoice': invoice,
          'invoiceitems': invoiceitems,
