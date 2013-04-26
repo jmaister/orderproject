@@ -10,8 +10,9 @@
 
     <!-- Le styles -->
     <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+    <!--<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">-->
     <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.1/spruce/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
     
     <style type="text/css">
       body {
@@ -58,8 +59,6 @@
               -->
             </ul>
             <ul class="nav pull-right">
-              user:{{user}},auth:{{user.is_authenticated}}
-
               {% if user.is_staff %}
               <li><a href="/admin/">Admin</a></li>
               {% endif %}
