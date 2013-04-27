@@ -13,7 +13,9 @@ Projecto DJango para facturación de pequeñas empresas o autónomos.
         cd orderproject
         python manage.py syncdb
         python manage.py runserver
-    
+
+Then, rename prod_settings.py.sample to prod_settings.py and modify the required values.
+
 
 **Tags**
 

@@ -19,3 +19,8 @@ EMAIL_HOST_USER = "" # needed
 EMAIL_HOST_PASSWORD = "" # needed
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+
+# Google Analytics
+GOOGLE_ANALYTICS_ID = None  # GA ID, UA-XXXXXXX-X 
+GOOGLE_ANALYTICS_SITE = None  # GA site name, example.xom

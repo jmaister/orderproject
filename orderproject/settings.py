@@ -194,7 +194,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     # allauth
     'allauth.account.context_processors.account',
-    'allauth.socialaccount.context_processors.socialaccount'
+    'allauth.socialaccount.context_processors.socialaccount',
+
+    'base.context_processors.settings_access',
 )
 
 AUTHENTICATION_BACKENDS = (
