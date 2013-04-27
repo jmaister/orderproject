@@ -1,6 +1,6 @@
 {% spaceless %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{LOCALE}}">
   <head>
     <meta charset="utf-8">
     <title>{% block head_title %} *Base* {% endblock %}</title>
@@ -102,7 +102,7 @@
         <div class="span10 offset1">
             {% if messages %}
               {% for message in messages %}
-                <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
                   <a class="close" data-dismiss="alert" href="#">&times;</a>
                   {{ message }}
                 </div>

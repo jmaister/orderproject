@@ -12,6 +12,11 @@
 
 {% block scripts %}
 <script type="text/javascript" src="{% static "jquery.formset.js" %}"></script>
+
+<script type="text/javascript" src="https://github.com/jquery/globalize/raw/master/lib/globalize.js"></script>
+<script type="text/javascript" src="https://github.com/jquery/globalize/raw/master/lib/cultures/globalize.culture.es.js"></script>
+<script type="text/javascript" src="https://github.com/jquery/globalize/raw/master/lib/cultures/globalize.culture.en-US.js"></script>
+
 <script type="text/javascript">
     $(function() {
         $('.InvoiceItemInline').formset({
@@ -20,10 +25,20 @@
             deleteText: '<span class="btn"><i class="icon-remove"></i> {% trans 'Remove' %}</span>',
         });
     });
-    
+
     $('#id_date, #id_date_paid').datepicker({dateFormat: 'dd/mm/yy'});
+
+        var l_lang;
+        if (navigator.userLanguage)// Explorer
+            l_lang = navigator.userLanguage;
+        else if (navigator.language)// FF
+            l_lang = navigator.language;
+        else
+            l_lang = "en";
+        Globalize.culture(l_lang);
 </script>
 <script type="text/javascript" src="{% static "js/invoice.js" %}"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -47,18 +62,15 @@
             </tr>
             <tr>
                 <td>{% trans 'Net' %}</td><td><span id="base" class="uneditable-input">{{object.base|localize}}</span></td>
-                <td>{% trans 'Taxes' %}</td><td><span id="taxes" class="uneditable-input">{{object.taxes|default:''|floatformat:2}}</span></td>
-                <td>{% trans 'Total' %}</td><td><span id="total" class="uneditable-input">{{object.total|default:''|floatformat:2}}</span></td>
+                <td>{% trans 'Taxes' %}</td><td><span id="taxes" class="uneditable-input">{{object.taxes|localize}}</span></td>
+                <td>{% trans 'Total' %}</td><td><span id="total" class="uneditable-input">{{object.total|localize}}</span></td>
             </tr>
         </table>
+        <br/>
         
         <fieldset class="module aligned ">
-        <legend>
-            Items
-        </legend>
-
         <table class="table">
-             <tr>             {% trans 'Invoice' %}
+             <tr>
                 <th>{% trans 'Product' %}</th>
                 <th>{% trans 'Price' %}</th>
                 <th>{% trans 'Quantity' %}</th>
@@ -80,11 +92,11 @@
                           <span>{{f.instance.tax_name|default_if_none:''}}</span>
                       </td>
                       <td class="numberfield field-tax_rate">
-                          <span>{{f.instance.tax_rate|default_if_none:''|floatformat:2}}</span>
+                          <span>{{f.instance.tax_rate|localize}}</span>
                       </td>
-                      <td class="numberfield field-base"><span>{{f.instance.base|default_if_none:''|floatformat:2}}</span></td>
-                      <td class="numberfield field-taxes"><span>{{f.instance.taxes|default_if_none:''|floatformat:2}}</span></td>
-                      <td class="numberfield field-total"><span>{{f.instance.total|default_if_none:''|floatformat:2}}</span></td>
+                      <td class="numberfield field-base"><span>{{f.instance.base|localize}}</span></td>
+                      <td class="numberfield field-taxes"><span>{{f.instance.taxes|localize}}</span></td>
+                      <td class="numberfield field-total"><span>{{f.instance.total|localize}}</span></td>
                       <td>{{f.DELETE}}</td>
                   </tr>
              {% endfor %}

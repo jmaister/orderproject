@@ -1,5 +1,8 @@
 
 var parse = function(n) {
+
+    return Globalize.parseFloat(n);
+    /*    
     if (n == '') {
         return 0; 
     } else if (n == null) {
@@ -9,12 +12,16 @@ var parse = function(n) {
     	return parseFloat(n)
 	}
 	return null;
+	*/
 };
 var fmt = function(n, dec) {
+    return Globalize.format(n, "n" );
+    /*
     if (dec === undefined) {
         dec = 2;
     }
 	return addCommas(n.toFixed(dec));
+	*/
 };
 
 
@@ -123,7 +130,7 @@ function update_invoice_row(row) {
         if (!quantity.val()) {
             quantity.val(1);
         }
-        var b = quantity.val() * price.val();
+        var b = parse(quantity.val()) * parse(price.val());
         var ti = b * parse(tax_rate.html()) / 100.0;
 
         base.html(fmt(b, 2));

@@ -8,7 +8,7 @@ from order.models import Invoice, InvoiceItem, Product, Client, Tax
 class InvoiceForm(forms.ModelForm):
 
     date = forms.DateField(initial=datetime.date.today, label=_('Date'))
-    date_paid = forms.DateField(label=_('Date paid'))
+    date_paid = forms.DateField(label=_('Date paid'), required=False)
 
     class Meta:
         model = Invoice
@@ -17,8 +17,8 @@ class InvoiceForm(forms.ModelForm):
 
 class InvoiceItemForm(forms.ModelForm):
 
-    price = forms.CharField(max_length=10, min_length=1)
-    quantity = forms.CharField(max_length=10, min_length=1)
+    price = forms.DecimalField(localize=True, decimal_places=2)
+    quantity = forms.IntegerField(localize=True)
 
     class Meta:
         model = InvoiceItem
