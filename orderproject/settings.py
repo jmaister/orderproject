@@ -153,6 +153,8 @@ INSTALLED_APPS = (
 
     'django.contrib.messages',
     'django.contrib.humanize',
+    
+    'widget_tweaks',
 
 )
 

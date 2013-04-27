@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load formsettags %}
-
+{% load widget_tweaks %}
 
 {% block styles %}
     <link href="{% static "css/invoice.css" %}" rel="stylesheet">
@@ -14,10 +14,8 @@
     $(function() {
         $('.InvoiceItemInline').formset({
             prefix : '{{ InvoiceItemInline.prefix }}',
-            added: function(newrow) {
-                var new_row_id = $('input#id_' +this.prefix + '-TOTAL_FORMS').val() - 1;
-                $(newrow).attr('id', 'id_'+ this.prefix + '-' + new_row_id);
-            }
+            addText: '<span class="btn"><i class="icon-plus-sign"></i> Add another</span>',
+            deleteText: '<span class="btn"><i class="icon-remove"></i> Remove</span>',
         });
     });
     
@@ -34,21 +32,29 @@
             Invoice
         </legend>
 
-        <b>Invoice Form:</b>
-        <br/>
-        {{ form }}
-        <br/>
-        Base: <span id="base">{{form.base.value}}</span>
-        Taxes: <span id="taxes"></span>
-        Total: <span id="total"></span>
-        <br/>
-        <br/>
+        {{form.errors}}
 
-        <b>Invoice Items Form:</b>
-        <br/>
-
-
+        <table border="0" cellspacing="5" cellpadding="5">
+            <tr>
+                <td>Code</td><td><span id="code" class="uneditable-input">{{object.code|default:''}}</span></td>
+                <td>{{form.date.label}}</td><td>{{form.date}}</td>
+            </tr>
+            <tr>
+                <td>{{form.client.label}}</td><td>{{form.client}}</td>
+                <td>{{form.date_paid.label}}</td><td>{{form.date_paid}}</td>
+            </tr>
+            <tr>
+                <td>Net</td><td class="total"><span id="base" class="uneditable-input">&nbsp;</span></td>
+                <td>Taxes</td><td class="total"><span id="taxes" class="uneditable-input">&nbsp;</span></td>
+                <td>Total</td><td class="total"><span id="total" class="uneditable-input">&nbsp;</span></td>
+            </tr>
+        </table>
+        
         <fieldset class="module aligned ">
+        <legend>
+            Items
+        </legend>
+            
         <table class="table">
              <tr>
                 <th>Product</th>
@@ -56,18 +62,18 @@
                 <th>Quantity</th>
                 <th>Tax Name</th>
                 <th>Tax Rate</th>
-                <th>Base</th>
+                <th>Net</th>
                 <th>Taxes</th>
                 <th>Total</th>
-                <th>Eliminar</th>
+                <th>Remove</th>
              </tr>
              {{ InvoiceItemInline.management_form }}
              {% for f in InvoiceItemInline %}
                   <tr class="InvoiceItemInline" id="id_{{ InvoiceItemInline.prefix }}-{{forloop.counter0}}">
                       <td>{{f.id}}
                           {{f.product.errors.as_ul}}{{f.product}}</td>
-                      <td>{{f.price.errors.as_ul}}{{f.price}}</td>
-                      <td>{{f.quantity.errors.as_ul}}{{f.quantity}}</td>
+                      <td>{{f.price.errors.as_ul}}{{f.price|add_class:"input-small"}}</td>
+                      <td>{{f.quantity.errors.as_ul}}{{f.quantity|add_class:"input-small"}}</td>
                       <td class="field-tax_name">
                           <span>{{f.tax_name.value|default_if_none:''}}</span>
                           {{f.tax_name.as_hidden}}
@@ -85,28 +91,8 @@
         </table>
         </fieldset>
 
-
-
-
-
-
-        {% comment %}
-        {% formset_table_bootstrap InvoiceItemInline 'InvoiceItemLine' %}
-        
-        
-        {{InvoiceItemInline.management_form}}
-        {% for fs in InvoiceItemInline %}
-        <div class="line">
-            <span> {% for field in fs %} <span>{{ field.label_tag }}: {{field}}</span> {% endfor %}
-        </div>
-        <div>
-            {{fs.errors}}
-        </div>
-        {% endfor %}
-        {% endcomment %}
-
     </fieldset>
-    <input title='Submit this form' type='submit' name='submit' value='Submit' />
+    <input title='Save this form' type='submit' name='submit' value='Save' />
 </form>
 {% endblock %}
 
