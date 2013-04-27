@@ -103,7 +103,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+
     # Transaccion cada request HTTP
     'django.middleware.transaction.TransactionMiddleware',
 )
@@ -153,7 +153,7 @@ INSTALLED_APPS = (
 
     'django.contrib.messages',
     'django.contrib.humanize',
-    
+
     'widget_tweaks',
 
 )
@@ -192,7 +192,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     # messages
     'django.contrib.messages.context_processors.messages',
-    # allauth 
+    # allauth
     'allauth.account.context_processors.account',
     'allauth.socialaccount.context_processors.socialaccount'
 )

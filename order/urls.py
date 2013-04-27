@@ -28,7 +28,7 @@ urlpatterns = patterns('',
     url(r'^client/$', ListViewByCompany.as_view(model=Client,), name="client_list"),
     url(r'^client/new/$', CreateViewByCompany.as_view(model=Client, form_class=ClientForm), name="client_create"),
     url(r'^client/(?P<pk>\d+)/$', UpdateViewByCompany.as_view(model=Client, form_class=ClientForm), name="client_edit"),
-    
+
     # Tax
     url(r'^tax/$', ListViewByCompany.as_view(model=Tax,), name="tax_list"),
     url(r'^tax/new/$', CreateViewByCompany.as_view(model=Tax, form_class=TaxForm), name="tax_create"),

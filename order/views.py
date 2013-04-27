@@ -6,6 +6,8 @@ from django.http import HttpResponse
 from django.template.context import Context
 from django.template.loader import get_template
 from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView
+from django.contrib import messages
 
 from braces.views import LoginRequiredMixin
 
@@ -14,8 +16,6 @@ from extra_views.advanced import NamedFormsetsMixin, CreateWithInlinesView, \
 
 from order.forms import InvoiceForm, InvoiceItemInline
 from order.models import Product, Invoice, InvoiceItem, Tax
-from django.views.generic.edit import CreateView, UpdateView
-from django.contrib import messages
 
 
 @login_required
@@ -23,19 +23,22 @@ def _json_view(request, clazz, pk):
     result = clazz.objects.filter(pk=pk)
     return HttpResponse(serializers.serialize('json', result), mimetype='application/json')
 
+
 @login_required
 def json_product(request, pk):
     return _json_view(request, Product, pk)
+
 
 @login_required
 def json_tax(request, pk):
     return _json_view(request, Tax, pk)
 
+
 @login_required
 def print_invoice(request, pk):
     invoice = Invoice.objects.get(id=pk)
     invoiceitems = InvoiceItem.objects.select_related().filter(invoice_id=pk)
-    
+
     t = get_template('order/invoice_print_bs.html')
     html = t.render(Context(
         {'invoice': invoice,
@@ -43,7 +46,7 @@ def print_invoice(request, pk):
          'blank_lines': range(8 - invoiceitems.count())
          }
         ))
-    return HttpResponse(html)    
+    return HttpResponse(html)
 
 
 class CompanyFilterMixin(LoginRequiredMixin):
@@ -62,7 +65,7 @@ class AddUserCompanyMixin(CompanyFilterMixin):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.company = self._get_company()
-        messages.success(self.request, str(self.object) +" saved.")
+        messages.success(self.request, str(self.object) + " saved.")
         return super(AddUserCompanyMixin, self).form_valid(form)
 
 
@@ -86,7 +89,7 @@ class InvoiceCreateView(LoginRequiredMixin, NamedFormsetsMixin, CreateWithInline
         # Save object to recalculate totals
         out = CreateWithInlinesView.forms_valid(self, form, inlines)
         self.object.save()
-        messages.success(self.request, "Invoice %s saved." % (self.object.code, ))
+        messages.success(self.request, "Invoice %s saved." % (self.object.code,))
         return out
 
 
@@ -110,7 +113,7 @@ class InvoiceUpdateView(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
         qs = Product.objects.filter(company=self._get_company())
         inline_formsets = super(InvoiceUpdateView, self).construct_inlines()
         for form in inline_formsets[0].forms:
-            form.fields['product'].queryset = qs 
+            form.fields['product'].queryset = qs
         return inline_formsets
 
     @transaction.commit_on_success
@@ -123,7 +126,7 @@ class InvoiceUpdateView(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
 
         # Save object to recalculate totals
         self.object.save()
-        messages.success(self.request, "Invoice %s saved." % (self.object.code, ))
+        messages.success(self.request, "Invoice %s saved." % (self.object.code,))
         return out
 
 

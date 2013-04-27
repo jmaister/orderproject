@@ -60,7 +60,7 @@ class Invoice(BaseModel):
             sum_base += invoice_item.base
             sum_taxes += invoice_item.taxes
             sum_total += invoice_item.total
-            
+
         self.base = sum_base
         self.taxes = sum_taxes
         self.total = sum_total
@@ -80,7 +80,6 @@ class Invoice(BaseModel):
         else:
             return self.code
 
-
     def save(self, force_insert=False, force_update=False, using=None,
         update_fields=None):
         self.calculate()
@@ -99,6 +98,7 @@ class Invoice(BaseModel):
             else:
                 taxmap[group] = invoice_item.taxes
         return taxmap
+
 
 class InvoiceItem(BaseModel):
     invoice = models.ForeignKey(Invoice)
@@ -127,7 +127,7 @@ class InvoiceItem(BaseModel):
         if self.tax_rate is None or self.tax_rate == 0:
             self.tax_name = self.product.tax.name
             self.tax_rate = self.product.tax.rate
-            
+
         self.base = (self.price * self.quantity)
         self.taxes = (self.base * self.tax_rate / Decimal(100.0))
         self.total = self.base + self.taxes
@@ -151,5 +151,5 @@ def create_user_profile(sender, instance, created, **kwargs):
         # UserProfile.objects.get_or_create(user=instance)
         profile = UserProfile(user=instance)
         profile.save()
-    
+
 post_save.connect(create_user_profile, sender=User)

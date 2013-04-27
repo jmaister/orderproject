@@ -12,11 +12,12 @@ class InvoiceForm(forms.ModelForm):
         model = Invoice
         exclude = ('company',)
 
+
 class InvoiceItemForm(forms.ModelForm):
-    
+
     price = forms.CharField(max_length=10, min_length=1)
     quantity = forms.CharField(max_length=10, min_length=1)
-    
+
     class Meta:
         model = InvoiceItem
 
@@ -28,21 +29,21 @@ class InvoiceItemInline(InlineFormSet):
 
 
 class ProductForm(forms.ModelForm):
-    
+
     class Meta:
         model = Product
         exclude = ('company',)
 
 
 class ClientForm(forms.ModelForm):
-    
+
     class Meta:
         model = Client
         exclude = ('company',)
 
 
 class TaxForm(forms.ModelForm):
-    
+
     class Meta:
         model = Tax
         exclude = ('company',)
