@@ -44,9 +44,9 @@
                 <td>{{form.date_paid.label}}</td><td>{{form.date_paid}}</td>
             </tr>
             <tr>
-                <td>Net</td><td class="total"><span id="base" class="uneditable-input">&nbsp;</span></td>
-                <td>Taxes</td><td class="total"><span id="taxes" class="uneditable-input">&nbsp;</span></td>
-                <td>Total</td><td class="total"><span id="total" class="uneditable-input">&nbsp;</span></td>
+                <td>Net</td><td class="total"><span id="base" class="uneditable-input">{{object.base|default:''}}</span></td>
+                <td>Taxes</td><td class="total"><span id="taxes" class="uneditable-input">{{object.taxes|default:''}}</span></td>
+                <td>Total</td><td class="total"><span id="total" class="uneditable-input">{{object.total|default:''}}</span></td>
             </tr>
         </table>
         
@@ -54,7 +54,7 @@
         <legend>
             Items
         </legend>
-            
+
         <table class="table">
              <tr>
                 <th>Product</th>
@@ -75,16 +75,14 @@
                       <td>{{f.price.errors.as_ul}}{{f.price|add_class:"input-small"}}</td>
                       <td>{{f.quantity.errors.as_ul}}{{f.quantity|add_class:"input-small"}}</td>
                       <td class="field-tax_name">
-                          <span>{{f.tax_name.value|default_if_none:''}}</span>
-                          {{f.tax_name.as_hidden}}
+                          <span>{{f.instance.tax_name|default_if_none:''}}</span>
                       </td>
                       <td class="numberfield field-tax_rate">
-                          <span>{{f.tax_rate.value|default_if_none:''}}</span>
-                          {{f.tax_rate.as_hidden}}
+                          <span>{{f.instance.tax_rate|default_if_none:''}}</span>
                       </td>
-                      <td class="numberfield field-base"><span>{{f.base.value}}</span></td>
-                      <td class="numberfield field-taxes"><span>{{f.taxes.value}}</span></td>
-                      <td class="numberfield field-total"><span>{{f.total.value}}</span></td>
+                      <td class="numberfield field-base"><span>{{f.instance.base|default_if_none:''}}</span></td>
+                      <td class="numberfield field-taxes"><span>{{f.instance.taxes|default_if_none:''}}</span></td>
+                      <td class="numberfield field-total"><span>{{f.instance.total|default_if_none:''}}</span></td>
                       <td>{{f.DELETE}}</td>
                   </tr>
              {% endfor %}

@@ -100,8 +100,6 @@ $(document).ready(function() {
         update_invoice_row(row);
     });
     
-    update_all();
-    
 });
 
 

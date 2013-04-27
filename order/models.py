@@ -108,8 +108,8 @@ class InvoiceItem(BaseModel):
     quantity = models.DecimalField(max_digits=10, decimal_places=0)
 
     base = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
-    tax_name = models.CharField(max_length=500)
-    tax_rate = models.DecimalField(max_digits=5, decimal_places=2)
+    tax_name = models.CharField(max_length=500, editable=False)
+    tax_rate = models.DecimalField(max_digits=5, decimal_places=2, editable=False)
     taxes = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
 
@@ -124,7 +124,7 @@ class InvoiceItem(BaseModel):
 
     def calculate(self):
         # Change to multiple taxes
-        if self.tax_rate is None or self.tax_rate == 0:
+        if not self.tax_rate or not self.tax_rate:
             self.tax_name = self.product.tax.name
             self.tax_rate = self.product.tax.rate
 
