@@ -18,4 +18,3 @@ def formset_table_bootstrap(formset, rowclass, *args, **kwargs):
         'formset': formset,
         'rowclass': rowclass,
     }
-
