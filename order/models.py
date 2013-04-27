@@ -40,7 +40,7 @@ class Client(BaseEntity):
 
 class Invoice(BaseModel):
     company = models.ForeignKey(Company)
-    code = models.CharField(max_length=50)
+    code = models.CharField(max_length=50, editable=False)
     date = models.DateField()
     client = models.ForeignKey(Client)
     date_paid = models.DateField(blank=True, null=True)
@@ -64,10 +64,27 @@ class Invoice(BaseModel):
         self.base = sum_base
         self.taxes = sum_taxes
         self.total = sum_total
-    
+
+    def get_next_code(self):
+        # Autocalculate next Invoice code
+        if not self.code and self.id:
+            num = 1
+            try:
+                lastcode = Invoice.objects.filter(company=self.company).exclude(pk=self.id).order_by('-id')[0].code
+                parts = lastcode.split('-')
+                num = int(parts[1]) + 1
+            except:
+                pass
+
+            return '%d-%03d' % (self.date.year, num)
+        else:
+            return self.code
+
+
     def save(self, force_insert=False, force_update=False, using=None,
         update_fields=None):
         self.calculate()
+        self.code = self.get_next_code()
         return BaseModel.save(self, force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
     def __unicode__(self):
