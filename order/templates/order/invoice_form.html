@@ -2,6 +2,8 @@
 {% load staticfiles %}
 {% load formsettags %}
 {% load widget_tweaks %}
+{% load l10n %}
+{% load i18n %}
 
 {% block styles %}
     <link href="{% static "css/invoice.css" %}" rel="stylesheet">
@@ -14,8 +16,8 @@
     $(function() {
         $('.InvoiceItemInline').formset({
             prefix : '{{ InvoiceItemInline.prefix }}',
-            addText: '<span class="btn"><i class="icon-plus-sign"></i> Add another</span>',
-            deleteText: '<span class="btn"><i class="icon-remove"></i> Remove</span>',
+            addText: '<span class="btn"><i class="icon-plus-sign"></i> {% trans 'Add another' %}</span>',
+            deleteText: '<span class="btn"><i class="icon-remove"></i> {% trans 'Remove' %}</span>',
         });
     });
     
@@ -29,14 +31,14 @@
     {% csrf_token %}
     <fieldset>
         <legend>
-            Invoice
+            {% trans 'Invoice' %}
         </legend>
 
         {{form.errors}}
 
         <table border="0" cellspacing="5" cellpadding="5">
             <tr>
-                <td>Code</td><td><span id="code" class="uneditable-input">{{object.code|default:''}}</span></td>
+                <td>{% trans 'Code' %}</td><td><span id="code" class="uneditable-input">{{object.code|default:''}}</span></td>
                 <td>{{form.date.label}}</td><td>{{form.date}}</td>
             </tr>
             <tr>
@@ -44,9 +46,9 @@
                 <td>{{form.date_paid.label}}</td><td>{{form.date_paid}}</td>
             </tr>
             <tr>
-                <td>Net</td><td class="total"><span id="base" class="uneditable-input">{{object.base|default:''}}</span></td>
-                <td>Taxes</td><td class="total"><span id="taxes" class="uneditable-input">{{object.taxes|default:''}}</span></td>
-                <td>Total</td><td class="total"><span id="total" class="uneditable-input">{{object.total|default:''}}</span></td>
+                <td>{% trans 'Net' %}</td><td><span id="base" class="uneditable-input">{{object.base|localize}}</span></td>
+                <td>{% trans 'Taxes' %}</td><td><span id="taxes" class="uneditable-input">{{object.taxes|default:''|floatformat:2}}</span></td>
+                <td>{% trans 'Total' %}</td><td><span id="total" class="uneditable-input">{{object.total|default:''|floatformat:2}}</span></td>
             </tr>
         </table>
         
@@ -56,16 +58,16 @@
         </legend>
 
         <table class="table">
-             <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Tax Name</th>
-                <th>Tax Rate</th>
-                <th>Net</th>
-                <th>Taxes</th>
-                <th>Total</th>
-                <th>Remove</th>
+             <tr>             {% trans 'Invoice' %}
+                <th>{% trans 'Product' %}</th>
+                <th>{% trans 'Price' %}</th>
+                <th>{% trans 'Quantity' %}</th>
+                <th>{% trans 'Tax Name' %}</th>
+                <th>{% trans 'Tax Rate' %}</th>
+                <th>{% trans 'Net' %}</th>
+                <th>{% trans 'Taxes' %}</th>
+                <th>{% trans 'Total' %}</th>
+                <th>{% trans 'Remove' %}</th>
              </tr>
              {{ InvoiceItemInline.management_form }}
              {% for f in InvoiceItemInline %}
@@ -78,11 +80,11 @@
                           <span>{{f.instance.tax_name|default_if_none:''}}</span>
                       </td>
                       <td class="numberfield field-tax_rate">
-                          <span>{{f.instance.tax_rate|default_if_none:''}}</span>
+                          <span>{{f.instance.tax_rate|default_if_none:''|floatformat:2}}</span>
                       </td>
-                      <td class="numberfield field-base"><span>{{f.instance.base|default_if_none:''}}</span></td>
-                      <td class="numberfield field-taxes"><span>{{f.instance.taxes|default_if_none:''}}</span></td>
-                      <td class="numberfield field-total"><span>{{f.instance.total|default_if_none:''}}</span></td>
+                      <td class="numberfield field-base"><span>{{f.instance.base|default_if_none:''|floatformat:2}}</span></td>
+                      <td class="numberfield field-taxes"><span>{{f.instance.taxes|default_if_none:''|floatformat:2}}</span></td>
+                      <td class="numberfield field-total"><span>{{f.instance.total|default_if_none:''|floatformat:2}}</span></td>
                       <td>{{f.DELETE}}</td>
                   </tr>
              {% endfor %}
@@ -90,7 +92,7 @@
         </fieldset>
 
     </fieldset>
-    <input title='Save this form' type='submit' name='submit' value='Save' />
+    <input type='submit' name='submit' value='{% trans 'Save' %}' />
 </form>
 {% endblock %}
 

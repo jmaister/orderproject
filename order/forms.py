@@ -1,12 +1,14 @@
 import datetime
 from django import forms
+from django.utils.translation import ugettext_lazy as _
 from extra_views.advanced import InlineFormSet
 from order.models import Invoice, InvoiceItem, Product, Client, Tax
 
 
 class InvoiceForm(forms.ModelForm):
 
-    date = forms.DateField(initial=datetime.date.today)
+    date = forms.DateField(initial=datetime.date.today, label=_('Date'))
+    date_paid = forms.DateField(label=_('Date paid'))
 
     class Meta:
         model = Invoice

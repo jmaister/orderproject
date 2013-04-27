@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
 
 class Company(BaseEntity):
@@ -37,12 +38,16 @@ class Client(BaseEntity):
     def get_absolute_url(self):
         return reverse('client_edit', args=[self.id])
 
+    class Meta:
+        verbose_name = _('Client')
+        verbose_name_plural = _('Clients')
+
 
 class Invoice(BaseModel):
     company = models.ForeignKey(Company)
     code = models.CharField(max_length=50, editable=False)
     date = models.DateField()
-    client = models.ForeignKey(Client)
+    client = models.ForeignKey(Client, verbose_name=_('Client'))
     date_paid = models.DateField(blank=True, null=True)
 
     base = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
@@ -102,10 +107,10 @@ class Invoice(BaseModel):
 
 class InvoiceItem(BaseModel):
     invoice = models.ForeignKey(Invoice)
-    product = models.ForeignKey(Product)
+    product = models.ForeignKey(Product, verbose_name=_('Product'))
 
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.DecimalField(max_digits=10, decimal_places=0)
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Price'))
+    quantity = models.DecimalField(max_digits=10, decimal_places=0, verbose_name=_('Quantity'))
 
     base = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
     tax_name = models.CharField(max_length=500, editable=False)
