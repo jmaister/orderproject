@@ -92,7 +92,7 @@
                           <span>{{f.instance.tax_name|default_if_none:''}}</span>
                       </td>
                       <td class="numberfield field-tax_rate">
-                          <span>{{f.instance.tax_rate|localize}}</span>
+                          <span>{{f.instance.tax_rate|default_if_none:''|localize}}</span>
                       </td>
                       <td class="numberfield field-base"><span>{{f.instance.base|localize}}</span></td>
                       <td class="numberfield field-taxes"><span>{{f.instance.taxes|localize}}</span></td>

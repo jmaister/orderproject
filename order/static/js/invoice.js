@@ -1,41 +1,10 @@
 
 var parse = function(n) {
-
     return Globalize.parseFloat(n);
-    /*    
-    if (n == '') {
-        return 0; 
-    } else if (n == null) {
-        return null;
-    } else if (n !== undefined) {
-    	n = n.replace(',', '');
-    	return parseFloat(n)
-	}
-	return null;
-	*/
 };
-var fmt = function(n, dec) {
+var fmt = function(n) {
     return Globalize.format(n, "n" );
-    /*
-    if (dec === undefined) {
-        dec = 2;
-    }
-	return addCommas(n.toFixed(dec));
-	*/
 };
-
-
-var addCommas = function(nStr){
-    nStr += '';
-    x = nStr.split('.');
-    x1 = x[0];
-    x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
-}
 
 var price = function(row, val) {
     var input = $("input#id_invoiceitem_set-"+row+"-price");
@@ -133,9 +102,9 @@ function update_invoice_row(row) {
         var b = parse(quantity.val()) * parse(price.val());
         var ti = b * parse(tax_rate.html()) / 100.0;
 
-        base.html(fmt(b, 2));
-        taxes.html(fmt(ti, 2));
-        total.html(fmt(b + ti, 2));
+        base.html(fmt(b));
+        taxes.html(fmt(ti));
+        total.html(fmt(b + ti));
     }
 
     sumRows("base", "base");
