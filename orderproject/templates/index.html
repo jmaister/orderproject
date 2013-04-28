@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block head_title %}{{block.super}} - Home{% endblock %}
 
@@ -10,21 +11,30 @@
     </p>
 </div>
 
+{% if user.is_authenticated %}
 <ul class="thumbnails">
-    <li class="span2">
-        <div id="name" class="thumbnail">
-            <a href="{% url 'invoice_list' %}">Invoices</a>
-        </div>
+    <li class="span2" class="thumbnail">
+        <h3><a href="{% url 'invoice_list' %}">{% trans 'Invoices' %}</a></h3>
     </li>
-    <li class="span2">
-        <a href="{% url 'product_list' %}" class="thumbnail">Products</a>
+    <li class="span2" class="thumbnail">
+        <h3><a href="{% url 'product_list' %}">{% trans 'Products' %}</a></h3>
     </li>
-    <li class="span2">
-        <a href="{% url 'client_list' %}" class="thumbnail">Clients</a>
+    <li class="span2" class="thumbnail">
+        <h3><a href="{% url 'client_list' %}">{% trans 'Clients' %}</a></h3>
     </li>
-    <li class="span2">
-        <a href="{% url 'tax_list' %}" class="thumbnail">Tax types</a>
+    <li class="span2" class="thumbnail">
+        <h3><a href="{% url 'tax_list' %}">{% trans 'Taxes' %}</a></h3>
     </li>
 </ul>
+{% else %}
+<ul class="thumbnails">
+    <li class="span4 thumbnail">
+        <h3><a href="/accounts/login/">Login</a></h3>
+    </li>
+    <li class="span4 thumbnail">
+        <h3><a href="/accounts/signup/">Create account</a></h3>
+    </li>
+</ul>
+{% endif %}
 
 {% endblock %}
