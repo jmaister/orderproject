@@ -143,7 +143,7 @@ class CreateViewByCompany(AddUserCompanyMixin, CreateView):
 
 
 class UpdateViewByCompany(AddUserCompanyMixin, UpdateView):
-    pass
+    template_name = "order/entity_form.html"
 
 
 class InvoiceListView(CompanyFilterMixin, ListView):

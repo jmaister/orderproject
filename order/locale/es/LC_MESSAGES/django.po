@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: order-1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-28 17:03+0200\n"
-"PO-Revision-Date: 2013-04-28 17:05+0100\n"
+"POT-Creation-Date: 2013-04-28 17:25+0200\n"
+"PO-Revision-Date: 2013-04-28 17:22+0100\n"
 "Last-Translator: Jordi Burgos <jordiburgos@gmail.com>\n"
 "Language-Team: ES <jordiburgos@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -25,6 +25,14 @@ msgstr "Fecha"
 msgid "Date paid"
 msgstr "Fecha de pago"
 
+#: .\models.py:11 .\models.py:47
+msgid "Address"
+msgstr "Dirección"
+
+#: .\models.py:12 .\models.py:48
+msgid "ID Number"
+msgstr "NIF"
+
 #: .\models.py:15
 msgid "Company"
 msgstr "Empresa"
@@ -33,7 +41,11 @@ msgstr "Empresa"
 msgid "Companies"
 msgstr "Empresas"
 
-#: .\models.py:27 .\templates\order\product_list.html.py:9
+#: .\models.py:21 .\templates\order\tax_list.html.py:9
+msgid "Rate"
+msgstr "Porcentaje"
+
+#: .\models.py:27 .\models.py:35 .\templates\order\product_list.html.py:9
 msgid "Tax"
 msgstr "Impuesto"
 
@@ -41,6 +53,15 @@ msgstr "Impuesto"
 #: .\templates\order\invoice_form.html.py:80
 msgid "Taxes"
 msgstr "Impuestos"
+
+#: .\models.py:33
+msgid "Print name"
+msgstr "Descripción en facturas"
+
+#: .\models.py:34 .\models.py:128 .\templates\order\invoice_form.html.py:75
+#: .\templates\order\product_list.html.py:9
+msgid "Price"
+msgstr "Precio"
 
 #: .\models.py:41 .\models.py:126 .\templates\order\invoice_form.html.py:74
 msgid "Product"
@@ -66,11 +87,6 @@ msgstr "Factura"
 msgid "Invoices"
 msgstr "Facturas"
 
-#: .\models.py:128 .\templates\order\invoice_form.html.py:75
-#: .\templates\order\product_list.html.py:9
-msgid "Price"
-msgstr "Precio"
-
 #: .\models.py:129 .\templates\order\invoice_form.html.py:76
 msgid "Quantity"
 msgstr "Cantidad"
@@ -83,19 +99,6 @@ msgstr "Lineas de factura"
 msgid "Invoice items"
 msgstr "Lineas de factura"
 
-#: .\templates\order\client_form.html.py:22
-#: .\templates\order\invoice_form.html.py:107
-#: .\templates\order\product_form.html.py:20
-#: .\templates\order\tax_form.html.py:20
-msgid "Save"
-msgstr "Guardar"
-
-#: .\templates\order\client_form.html.py:23
-#: .\templates\order\product_form.html.py:21
-#: .\templates\order\tax_form.html.py:21
-msgid "Cancel"
-msgstr "Cancelar"
-
 #: .\templates\order\client_list.html.py:6
 msgid "New Client"
 msgstr "Nuevo Cliente"
@@ -105,6 +108,19 @@ msgstr "Nuevo Cliente"
 #: .\templates\order\tax_list.html.py:9
 msgid "Name"
 msgstr "Descripción"
+
+#: .\templates\order\entity_form.html.py:13
+msgid "Save this form"
+msgstr "Guarda este formulario"
+
+#: .\templates\order\entity_form.html.py:13
+#: .\templates\order\invoice_form.html.py:107
+msgid "Save"
+msgstr "Guardar"
+
+#: .\templates\order\entity_form.html.py:14
+msgid "Cancel"
+msgstr "Cancelar"
 
 #: .\templates\order\invoice_form.html.py:24
 msgid "Add another"
@@ -154,7 +170,3 @@ msgstr "Nuevo Producto"
 #: .\templates\order\tax_list.html.py:6
 msgid "New Tax"
 msgstr "Nuevo Impuesto"
-
-#: .\templates\order\tax_list.html.py:9
-msgid "Rate"
-msgstr "Porcentaje"

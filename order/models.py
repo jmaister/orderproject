@@ -8,8 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Company(BaseEntity):
-    address = models.TextField()
-    id_number = models.CharField(max_length=20)
+    address = models.TextField(verbose_name=_('Address'))
+    id_number = models.CharField(max_length=20, verbose_name=_('ID Number'))
 
     class Meta:
         verbose_name = _('Company')
@@ -18,7 +18,7 @@ class Company(BaseEntity):
 
 class Tax(BaseEntity):
     company = models.ForeignKey(Company)
-    rate = models.DecimalField(max_digits=5, decimal_places=2)
+    rate = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_('Rate'))
 
     def get_absolute_url(self):
         return reverse('tax_edit', args=[self.id])
@@ -30,9 +30,9 @@ class Tax(BaseEntity):
 
 class Product(BaseEntity):
     company = models.ForeignKey(Company)
-    print_name = models.CharField(max_length=50)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    tax = models.ForeignKey(Tax)
+    print_name = models.CharField(max_length=50, verbose_name=_('Print name'))
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Price'))
+    tax = models.ForeignKey(Tax, verbose_name=_('Tax'))
 
     def get_absolute_url(self):
         return reverse('product_edit', args=[self.id])
@@ -44,8 +44,8 @@ class Product(BaseEntity):
 
 class Client(BaseEntity):
     company = models.ForeignKey(Company)
-    address = models.TextField()
-    id_number = models.CharField(max_length=20)
+    address = models.TextField(verbose_name=_('Address'))
+    id_number = models.CharField(max_length=20, verbose_name=_('ID Number'))
 
     def get_absolute_url(self):
         return reverse('client_edit', args=[self.id])

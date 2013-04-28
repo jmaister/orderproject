@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 
 class BaseModel(models.Model):
@@ -17,7 +18,7 @@ class BaseModel(models.Model):
 
 
 class BaseEntity(BaseModel):
-    name = models.CharField(max_length=500)
+    name = models.CharField(max_length=500, verbose_name=_('Name'))
     #active = models.BooleanField(default=True,editable=False)
 
     def __unicode__(self):

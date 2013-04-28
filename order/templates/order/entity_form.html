@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<form method='post' action='{{request.path}}' id="entity_form">
+    {% csrf_token %}
+    <fieldset>
+        <legend>{% trans verbose_name %}</legend>
+        
+        {{form}}
+
+    </fieldset>
+    <input class="btn" title='{% trans 'Save this form' %}' type='submit' name='submit' value='{% trans 'Save' %}' />
+    <a class="btn" href="{% url 'tax_list' %}">{% trans 'Cancel' %}</a>
+</form>
+{% endblock %}
+
