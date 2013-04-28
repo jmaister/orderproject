@@ -1,12 +1,10 @@
 from django.conf.urls import patterns, url
 from django.contrib import admin
-from django.contrib.auth.decorators import login_required
-from django.views.generic.list import ListView
 from order import views
 from order.forms import ProductForm, ClientForm, TaxForm
-from order.models import Invoice, Product, Client, Tax
+from order.models import Product, Client, Tax
 from order.views import ListViewByCompany, InvoiceCreateView, InvoiceUpdateView, \
-    CreateViewByCompany, UpdateViewByCompany, print_invoice
+    CreateViewByCompany, UpdateViewByCompany, print_invoice, InvoiceListView
 
 
 admin.autodiscover()
@@ -14,7 +12,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
 
     # Invoice
-    url(r'^invoice/$', login_required(ListView.as_view(model=Invoice,)), name="invoice_list"),
+    url(r'^invoice/$', InvoiceListView.as_view(), name="invoice_list"),
     url(r'^invoice/new/$', InvoiceCreateView.as_view(), name="invoice_create"),
     url(r'^invoice/(?P<pk>\d+)/$', InvoiceUpdateView.as_view(), name="invoice_edit"),
     url(r'^invoice/(?P<pk>\d+)/print/$', print_invoice, name="invoice_print"),

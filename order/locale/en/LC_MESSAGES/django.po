@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-27 19:52+0200\n"
+"POT-Creation-Date: 2013-04-28 17:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,71 +20,140 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: .\forms.py:11
+#: .\forms.py:11 .\templates\order\invoice_list.html.py:11
 msgid "Date paid"
 msgstr ""
 
-#: .\models.py:42 .\models.py:50
-msgid "Client"
+#: .\models.py:15
+msgid "Company"
 msgstr ""
 
-#: .\models.py:43
-msgid "Clients"
+#: .\models.py:16
+msgid "Companies"
 msgstr ""
 
-#: .\models.py:110 .\templates\order\invoice_form.html.py:62
-msgid "Product"
+#: .\models.py:27 .\templates\order\product_list.html.py:9
+msgid "Tax"
 msgstr ""
 
-#: .\models.py:112 .\templates\order\invoice_form.html.py:63
-msgid "Price"
-msgstr ""
-
-#: .\models.py:113 .\templates\order\invoice_form.html.py:64
-msgid "Quantity"
-msgstr ""
-
-#: .\templates\order\invoice_form.html.py:19
-msgid "Add another"
-msgstr ""
-
-#: .\templates\order\invoice_form.html.py:20
-#: .\templates\order\invoice_form.html.py:70
-msgid "Remove"
-msgstr ""
-
-#: .\templates\order\invoice_form.html.py:34
-#: .\templates\order\invoice_form.html.py:61
-msgid "Invoice"
-msgstr ""
-
-#: .\templates\order\invoice_form.html.py:41
-msgid "Code"
-msgstr ""
-
-#: .\templates\order\invoice_form.html.py:49
-#: .\templates\order\invoice_form.html.py:67
-msgid "Net"
-msgstr ""
-
-#: .\templates\order\invoice_form.html.py:50
-#: .\templates\order\invoice_form.html.py:68
+#: .\models.py:28 .\templates\order\invoice_form.html.py:65
+#: .\templates\order\invoice_form.html.py:80
 msgid "Taxes"
 msgstr ""
 
-#: .\templates\order\invoice_form.html.py:51
-#: .\templates\order\invoice_form.html.py:69
-msgid "Total"
+#: .\models.py:41 .\models.py:126 .\templates\order\invoice_form.html.py:74
+msgid "Product"
 msgstr ""
 
-#: .\templates\order\invoice_form.html.py:65
-msgid "Tax Name"
+#: .\models.py:42
+msgid "Products"
+msgstr ""
+
+#: .\models.py:54 .\models.py:62 .\templates\order\invoice_list.html.py:11
+msgid "Client"
+msgstr ""
+
+#: .\models.py:55
+msgid "Clients"
+msgstr ""
+
+#: .\models.py:120
+msgid "Invoice"
+msgstr ""
+
+#: .\models.py:121
+msgid "Invoices"
+msgstr ""
+
+#: .\models.py:128 .\templates\order\invoice_form.html.py:75
+#: .\templates\order\product_list.html.py:9
+msgid "Price"
+msgstr ""
+
+#: .\models.py:129 .\templates\order\invoice_form.html.py:76
+msgid "Quantity"
+msgstr ""
+
+#: .\models.py:162
+msgid "Invoice item"
+msgstr ""
+
+#: .\models.py:163
+msgid "Invoice items"
+msgstr ""
+
+#: .\templates\order\client_form.html.py:22
+#: .\templates\order\invoice_form.html.py:107
+#: .\templates\order\product_form.html.py:20
+#: .\templates\order\tax_form.html.py:20
+msgid "Save"
+msgstr ""
+
+#: .\templates\order\client_form.html.py:23
+#: .\templates\order\product_form.html.py:21
+#: .\templates\order\tax_form.html.py:21
+msgid "Cancel"
+msgstr ""
+
+#: .\templates\order\client_list.html.py:6
+msgid "New Client"
+msgstr ""
+
+#: .\templates\order\client_list.html.py:9
+#: .\templates\order\product_list.html.py:9
+#: .\templates\order\tax_list.html.py:9
+msgid "Name"
+msgstr ""
+
+#: .\templates\order\invoice_form.html.py:24
+msgid "Add another"
+msgstr ""
+
+#: .\templates\order\invoice_form.html.py:25
+#: .\templates\order\invoice_form.html.py:82
+msgid "Remove"
+msgstr ""
+
+#: .\templates\order\invoice_form.html.py:56
+#: .\templates\order\invoice_list.html.py:11
+msgid "Code"
+msgstr ""
+
+#: .\templates\order\invoice_form.html.py:64
+#: .\templates\order\invoice_form.html.py:79
+msgid "Net"
 msgstr ""
 
 #: .\templates\order\invoice_form.html.py:66
+#: .\templates\order\invoice_form.html.py:81
+#: .\templates\order\invoice_list.html.py:11
+msgid "Total"
+msgstr ""
+
+#: .\templates\order\invoice_form.html.py:77
+msgid "Tax Name"
+msgstr ""
+
+#: .\templates\order\invoice_form.html.py:78
 msgid "Tax Rate"
 msgstr ""
 
-#: .\templates\order\invoice_form.html.py:95
-msgid "Save"
+#: .\templates\order\invoice_list.html.py:8
+msgid "New Invoice"
+msgstr ""
+
+#: .\templates\order\invoice_list.html.py:19
+msgid "Print"
+msgstr ""
+
+#: .\templates\order\product_list.html.py:6
+msgid "New Product"
+msgstr ""
+
+#: .\templates\order\tax_list.html.py:6
+msgid "New Tax"
+msgstr ""
+
+#: .\templates\order\tax_list.html.py:9
+msgid "Rate"
 msgstr ""

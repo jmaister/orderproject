@@ -13,14 +13,14 @@
     {% csrf_token %}
     <fieldset>
         <legend>
-            Client
+            {% trans verbose_name %}
         </legend>
         
         {{form}}
 
     </fieldset>
-    <input class="btn" title='Submit this form' type='submit' name='submit' value='Submit' />
-    <a class="btn" href="{% url 'client_list' %}">Cancel</a>
+    <input class="btn" title='Submit this form' type='submit' name='submit' value='{% trans 'Save' %}' />
+    <a class="btn" href="{% url 'client_list' %}">{% trans 'Cancel' %}</a>
 </form>
 {% endblock %}
 

@@ -49,7 +49,15 @@ def print_invoice(request, pk):
     return HttpResponse(html)
 
 
-class CompanyFilterMixin(LoginRequiredMixin):
+class AddModelNameMixin(object):
+    def get_context_data(self, **kwargs):
+        context = super(AddModelNameMixin, self).get_context_data(**kwargs)
+        context['verbose_name'] = self.model._meta.verbose_name
+        context['verbose_name_plural'] = self.model._meta.verbose_name_plural
+        return context
+
+
+class CompanyFilterMixin(AddModelNameMixin, LoginRequiredMixin):
 
     def get_queryset(self):
         # Filter the company items only
@@ -136,3 +144,7 @@ class CreateViewByCompany(AddUserCompanyMixin, CreateView):
 
 class UpdateViewByCompany(AddUserCompanyMixin, UpdateView):
     pass
+
+
+class InvoiceListView(CompanyFilterMixin, ListView):
+    model = Invoice

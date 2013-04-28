@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
 {% load formsettags %}
 {% load widget_tweaks %}
+{% load staticfiles %}
 {% load l10n %}
 {% load i18n %}
 
@@ -46,7 +46,7 @@
     {% csrf_token %}
     <fieldset>
         <legend>
-            {% trans 'Invoice' %}
+            {% trans verbose_name %}
         </legend>
 
         {{form.errors}}

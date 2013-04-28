@@ -11,6 +11,10 @@ class Company(BaseEntity):
     address = models.TextField()
     id_number = models.CharField(max_length=20)
 
+    class Meta:
+        verbose_name = _('Company')
+        verbose_name_plural = _('Companies')
+
 
 class Tax(BaseEntity):
     company = models.ForeignKey(Company)
@@ -18,6 +22,10 @@ class Tax(BaseEntity):
 
     def get_absolute_url(self):
         return reverse('tax_edit', args=[self.id])
+
+    class Meta:
+        verbose_name = _('Tax')
+        verbose_name_plural = _('Taxes')
 
 
 class Product(BaseEntity):
@@ -28,6 +36,10 @@ class Product(BaseEntity):
 
     def get_absolute_url(self):
         return reverse('product_edit', args=[self.id])
+
+    class Meta:
+        verbose_name = _('Product')
+        verbose_name_plural = _('Products')
 
 
 class Client(BaseEntity):
@@ -104,6 +116,10 @@ class Invoice(BaseModel):
                 taxmap[group] = invoice_item.taxes
         return taxmap
 
+    class Meta:
+        verbose_name = _('Invoice')
+        verbose_name_plural = _('Invoices')
+
 
 class InvoiceItem(BaseModel):
     invoice = models.ForeignKey(Invoice)
@@ -141,6 +157,10 @@ class InvoiceItem(BaseModel):
         update_fields=None):
         self.calculate()
         return BaseModel.save(self, force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+
+    class Meta:
+        verbose_name = _('Invoice item')
+        verbose_name_plural = _('Invoice items')
 
 
 class UserProfile(models.Model):

@@ -1,11 +1,14 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+{% load l10n %}
+{% load i18n %}
 
 {% block content %}
-<h2>Invoices</h2>
-<a class="btn" href="{% url 'invoice_create' %}">New Invoice</a>
+<h2>{% trans verbose_name_plural %}</h2>
+<a class="btn" href="{% url 'invoice_create' %}">{% trans 'New Invoice' %}</a>
 <table class="table">
     <tr>
-        <th>Code</th><th>Client</th><th>Total</th><th>Paid On</th><th><i class="icon-th"></i></th>
+        <th>{% trans 'Code' %}</th><th>{% trans 'Client' %}</th><th>{% trans 'Total' %}</th><th>{% trans 'Date paid' %}</th><th><i class="icon-th"></i></th>
     </tr>
     {% for invoice in object_list %}
     <tr>
@@ -13,7 +16,7 @@
         <td>{{invoice.client}}</td>
         <td>{{invoice.total}}</td>
         <td>{{invoice.paid_date}}</td>
-        <td><a class="btn" target="_blank" href="{% url 'invoice_print' invoice.id %}">Print</a></td>
+        <td><a class="btn" target="_blank" href="{% url 'invoice_print' invoice.id %}">{% trans 'Print' %}</a></td>
     </tr>
     {% endfor %}
 </table>

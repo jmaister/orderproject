@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
-<h2>Tax Types</h2>
-<a class="btn" href="{% url 'tax_create' %}">New Tax Type</a>
+<h2>{% trans verbose_name_plural %}</h2>
+<a class="btn" href="{% url 'tax_create' %}">{% trans 'New Tax' %}</a>
 <table class="table">
     <tr>
-        <th>Name</th><th>Rate</th>
+        <th>{% trans 'Name' %}</th><th>{% trans 'Rate' %}</th>
     </tr>
     {% for tax in object_list %}
     <tr>
