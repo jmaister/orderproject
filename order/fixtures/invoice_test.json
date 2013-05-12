@@ -1,0 +1,62 @@
+[
+{
+    "pk": 1, 
+    "model": "order.company", 
+    "fields": {
+        "id_number": "12.12121.1321-F", 
+        "name": "company1", 
+        "address": "C/ dfsokj flksdj flsdj f\nsd sdof jdo fosd f\n23893893  ssldjkf osdi j"
+    }
+},
+{
+    "pk": 1, 
+    "model": "order.tax", 
+    "fields": {
+        "company": 1, 
+        "name": "IVA Normal", 
+        "rate": "21"
+    }
+},
+{
+    "pk": 1, 
+    "model": "order.product", 
+    "fields": {
+        "price": "100", 
+        "company": 1, 
+        "print_name": "Product One", 
+        "tax": 1, 
+        "name": "Product 1"
+    }
+},
+{
+    "pk": 1, 
+    "model": "order.client", 
+    "fields": {
+        "id_number": "11.236.333-X", 
+        "company": 1, 
+        "name": "Client 1", 
+        "address": "C/s7df98s7df, 093\r\ns90f798d s9f 79sd7\r\ns90df88d7f8d7 8df87"
+    }
+},
+{
+    "pk": 1, 
+    "model": "order.invoice", 
+    "fields": {
+        "code": "1", 
+        "company": 1, 
+        "taxes": "0.00", 
+        "client": 1, 
+        "date_paid": null, 
+        "base": "0.00", 
+        "date": "2013-04-20", 
+        "total": "0.00"
+    }
+},
+{
+    "pk": 1, 
+    "model": "order.userprofile", 
+    "fields": {
+        "company": 1
+    }
+}
+]

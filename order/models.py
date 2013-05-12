@@ -1,9 +1,9 @@
 from base.models import BaseEntity, BaseModel
 from decimal import Decimal
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import post_save
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -149,8 +149,11 @@ class InvoiceItem(BaseModel):
             self.tax_name = self.product.tax.name
             self.tax_rate = self.product.tax.rate
 
-        self.base = (self.price * self.quantity)
-        self.taxes = (self.base * self.tax_rate / Decimal(100.0))
+        if not self.price:
+            self.price = self.product.price
+
+        self.base = self.price * self.quantity
+        self.taxes = self.base * self.tax_rate / Decimal("100")
         self.total = self.base + self.taxes
 
     def save(self, force_insert=False, force_update=False, using=None,
