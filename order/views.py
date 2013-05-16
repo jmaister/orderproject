@@ -1,4 +1,6 @@
 # Create your views here.
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.db import transaction
@@ -8,6 +10,7 @@ from django.template.loader import get_template
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
+from django.core.serializers.json import DjangoJSONEncoder
 
 from braces.views import LoginRequiredMixin
 
@@ -26,7 +29,10 @@ def _json_view(request, clazz, pk):
 
 @login_required
 def json_product(request, pk):
-    return _json_view(request, Product, pk)
+    obj = Product.objects.get(pk=pk)
+    # Only serialize the needed data
+    result = {'price': obj.price, 'tax': {'name': obj.tax.name, 'rate': obj.tax.rate}}
+    return HttpResponse(json.dumps(result, cls=DjangoJSONEncoder), mimetype='application/json')
 
 
 @login_required
