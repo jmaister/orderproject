@@ -13,9 +13,8 @@
 {% block scripts %}
 <script type="text/javascript" src="{% static "jquery.formset.js" %}"></script>
 
-<script type="text/javascript" src="https://github.com/jquery/globalize/raw/master/lib/globalize.js"></script>
-<script type="text/javascript" src="https://github.com/jquery/globalize/raw/master/lib/cultures/globalize.culture.es.js"></script>
-<script type="text/javascript" src="https://github.com/jquery/globalize/raw/master/lib/cultures/globalize.culture.en-US.js"></script>
+<script type="text/javascript" src="{% static "js/globalize/globalize.js" %}"></script>
+<script type="text/javascript" src="{% static "js/globalize/globalize.cultures-min.js" %}"></script>
 
 <script type="text/javascript">
     $(function() {
@@ -28,14 +27,18 @@
 
     $('#id_date, #id_date_paid').datepicker({dateFormat: 'dd/mm/yy'});
 
-        var l_lang;
-        if (navigator.userLanguage)// Explorer
-            l_lang = navigator.userLanguage;
-        else if (navigator.language)// FF
-            l_lang = navigator.language;
-        else
-            l_lang = "en";
-        Globalize.culture(l_lang);
+    // Select Globalize language
+    var l_lang;
+    if (navigator.userLanguage) {
+        // Explorer
+        l_lang = navigator.userLanguage;
+    } else if (navigator.language) {
+        // FF
+        l_lang = navigator.language;
+    } else {
+        l_lang = "en";
+    }
+    Globalize.culture(l_lang); 
 </script>
 <script type="text/javascript" src="{% static "js/invoice.js" %}"></script>
 
