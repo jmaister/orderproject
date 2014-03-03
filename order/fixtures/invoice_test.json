@@ -54,8 +54,9 @@
 },
 {
     "pk": 1, 
-    "model": "order.userprofile", 
+    "model": "order.profile", 
     "fields": {
+        "username": "testuser1",
         "company": 1
     }
 }

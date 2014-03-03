@@ -3,7 +3,6 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
-from django.db import transaction
 from django.http import HttpResponse
 from django.template.context import Context
 from django.template.loader import get_template
@@ -18,7 +17,7 @@ from extra_views.advanced import NamedFormsetsMixin, CreateWithInlinesView, \
     UpdateWithInlinesView
 
 from order.forms import InvoiceForm, InvoiceItemInline
-from order.models import Product, Invoice, InvoiceItem, Tax
+from order.models import Product, Invoice, InvoiceItem, Tax, Client
 
 
 @login_required
@@ -67,15 +66,14 @@ class CompanyFilterMixin(AddModelNameMixin, LoginRequiredMixin):
 
     def get_queryset(self):
         # Filter the company items only
-        profile = self.request.user.get_profile()
-        return self.model.objects.filter(company=profile.company)
+        user_company = self.request.user.company
+        return self.model.objects.filter(company=user_company)
 
 
 class AddUserCompanyMixin(CompanyFilterMixin):
     def _get_company(self):
-        return self.request.user.get_profile().company
+        return self.request.user.company
 
-    @transaction.commit_on_success
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.company = self._get_company()
@@ -95,10 +93,22 @@ class InvoiceCreateView(LoginRequiredMixin, NamedFormsetsMixin, CreateWithInline
     inlines = [InvoiceItemInline]
     inlines_names = ['InvoiceItemInline']
 
-    @transaction.commit_on_success
+    def get_form(self, form_class):
+        # Filter cilents on main form, by company
+        form = CreateWithInlinesView.get_form(self, form_class)
+        form.fields['client'].queryset = Client.objects.filter(company=self.request.user.company)
+        return form
+
+    def construct_inlines(self):
+        # Filter products inlines, by company
+        inlines = CreateWithInlinesView.construct_inlines(self)
+        invoiceItemInline = inlines[0]
+        invoiceItemInline.form.base_fields['product'].queryset = Product.objects.filter(company=self.request.user.company)
+        return inlines
+
     def forms_valid(self, form, inlines):
         # Default company
-        self.object.company = self.request.user.get_profile().company
+        self.object.company = self.request.user.company
 
         # Save object to recalculate totals
         out = CreateWithInlinesView.forms_valid(self, form, inlines)
@@ -116,7 +126,7 @@ class InvoiceUpdateView(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
     inlines_names = ['InvoiceItemInline']
 
     def _get_company(self):
-        return self.request.user.get_profile().company
+        return self.request.user.company
 
     def get_queryset(self):
         company = self._get_company()
@@ -130,7 +140,6 @@ class InvoiceUpdateView(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
             form.fields['product'].queryset = qs
         return inline_formsets
 
-    @transaction.commit_on_success
     def forms_valid(self, form, inlines):
         # Default company
         if not self.object.company:
@@ -145,7 +154,7 @@ class InvoiceUpdateView(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
 
 
 class CreateViewByCompany(AddUserCompanyMixin, CreateView):
-    pass
+    template_name = "order/entity_form.html"
 
 
 class UpdateViewByCompany(AddUserCompanyMixin, UpdateView):

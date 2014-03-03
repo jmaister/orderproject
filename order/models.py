@@ -1,9 +1,8 @@
 from base.models import BaseEntity, BaseModel
 from decimal import Decimal
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -166,14 +165,16 @@ class InvoiceItem(BaseModel):
         verbose_name_plural = _('Invoice items')
 
 
-class UserProfile(models.Model):
+class Profile(AbstractUser):
+    """
     # This field is required.
     user = models.OneToOneField(User, unique=True, primary_key=True, related_name="user")
-
-    # Other fields here
+    """
     company = models.ForeignKey(Company, null=True)
 
 
+
+"""
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         # UserProfile.objects.get_or_create(user=instance)
@@ -181,3 +182,4 @@ def create_user_profile(sender, instance, created, **kwargs):
         profile.save()
 
 post_save.connect(create_user_profile, sender=User)
+"""

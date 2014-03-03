@@ -2,10 +2,10 @@ from decimal import Decimal
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from order.models import Invoice, InvoiceItem
+import datetime
 
 
 class ViewsTestCase(TestCase):
-    fixtures = ['invoice_test.json']
 
     def test_index(self):
         resp = self.client.get('/', follow=True)
@@ -21,7 +21,7 @@ class InvoiceTestCase(TestCase):
 
     def setUp(self):
         super(InvoiceTestCase, self).setUp()
-        self.invoice = Invoice.objects.get(pk=1)
+        self.invoice = Invoice.objects.create(company_id=1, date=datetime.datetime.now(), client_id=1)
 
     def test_new_invoiceitem(self):
         self.assertTrue(self.invoice.total == 0)

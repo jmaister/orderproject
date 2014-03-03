@@ -17,12 +17,14 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(PROJECT_PATH, 'orders.db'),                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': os.path.join(PROJECT_PATH, 'orders.db'),  # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+
+        'ATOMIC_REQUESTS': True  # Tie transactions to HTTP requests
     }
 }
 
@@ -106,9 +108,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    # Transaccion cada request HTTP
-    'django.middleware.transaction.TransactionMiddleware',
 
 )
 
@@ -214,7 +213,8 @@ AUTHENTICATION_BACKENDS = (
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 # Django User profile config
-AUTH_PROFILE_MODULE = 'order.UserProfile'
+#AUTH_PROFILE_MODULE = 'order.Profile'
+AUTH_USER_MODEL = 'order.Profile'
 
 # django-allauth config
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"
