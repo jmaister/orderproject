@@ -80,16 +80,16 @@
               <li class="dropdown">
                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">User [{{user}}]<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="/accounts/email/">Email</a></li>
-                    <li><a href="/accounts/social/connections/">Social</a></li>
-                    <li><a href="/accounts/password/change/">Password</a></li>
+                    <li><a href="{% url 'account_email' %}">Email</a></li>
+                    <li><a href="{% url 'socialaccount_connections' %}">Social</a></li>
+                    <li><a href="{% url 'account_change_password' %}">Password</a></li>
                 </ul>
               </li>
               
-              <li><a href="/accounts/logout/">Logout</a></li>
+              <li><a href="{% url 'account_logout' %}">Salir</a></li>
               {% else %}
-              <li><a href="/accounts/login/" class="navbar-link">Login</a></li>
-              <li><a href="/accounts/signup/">Create account</a></li>
+                <li><a href="{% url 'account_login' %}" class="navbar-link">Login</a></li>
+                <li><a href="{% url 'account_signup' %}">Create account</a></li>
               {% endif %}
             </ul>
           </div>
