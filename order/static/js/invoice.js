@@ -1,6 +1,10 @@
 
 var parse = function(n) {
-    return Globalize.parseFloat(n);
+    var value = Globalize.parseFloat(n);
+    if (isNaN(value)) {
+        return null;
+    }
+    return value;
 };
 var fmt = function(n) {
     if (isNaN(n)) {
@@ -104,7 +108,7 @@ function update_invoice_row(row) {
         var price = $("input#id_invoiceitem_set-"+row+"-price");
         var quantity = $("input#id_invoiceitem_set-"+row+"-quantity");
         var tax_rate = $(rowid +" td.field-tax_rate span");
-    
+
         var b = parse(quantity.val()) * parse(price.val());
         var ti = b * parse(tax_rate.html()) / 100.0;
 
