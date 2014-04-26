@@ -159,6 +159,9 @@ INSTALLED_APPS = (
 
     'widget_tweaks',
 
+    # REST API
+    'tastypie',
+
 )
 
 # A sample logging configuration. The only tangible logging
