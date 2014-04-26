@@ -1,7 +1,7 @@
-Django==1.6.2
-django-admin-bootstrapped==0.3.2
-django-allauth==0.15.0
-django-debug-toolbar==0.9.4
+Django==1.6.3
+django-admin-bootstrapped==1.6.4
+django-allauth==0.16.1
+django-debug-toolbar==1.2
 django-extra-views==0.6.4
-django-braces==1.0.0
+django-braces==1.4.0
 django-widget-tweaks==1.3
