@@ -1,22 +1,84 @@
 from base.models import BaseEntity, BaseModel
 from decimal import Decimal
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, \
+    BaseUserManager
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
-class Company(BaseEntity):
+class OrderUserManager(BaseUserManager):
+    def create_user(self, email, company, password=None):
+        """
+        Creates and saves a User with the given email, company name, and password.
+        """
+        if not email:
+            raise ValueError("Users must have an email address")
+
+        if not company:
+            raise ValueError("Users must have a company name")
+
+        user = self.model(
+            email=OrderUserManager.normalize_email(email),
+            company=company,
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, company, password):
+        """
+        Creates and saves a superuser
+        with the given email, company name and password.
+        """
+        user = self.create_user(email,
+            password=password,
+            company=company
+        )
+        user.is_admin = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+USERNAME_FIELD = "email"
+REQUIRED_FIELDS = ["company", ]
+
+
+class OrderUser(AbstractBaseUser, PermissionsMixin):
+    objects = OrderUserManager()
+
+    USERNAME_FIELD = USERNAME_FIELD
+    REQUIRED_FIELDS = REQUIRED_FIELDS
+
+    email = models.EmailField(
+        verbose_name="email address",
+        max_length=255,
+        unique=True,
+        db_index=True,
+    )
+    company = models.CharField(max_length=50, verbose_name=_('Company Name'))
     address = models.TextField(verbose_name=_('Address'))
     id_number = models.CharField(max_length=20, verbose_name=_('ID Number'))
 
-    class Meta:
-        verbose_name = _('Company')
-        verbose_name_plural = _('Companies')
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+
+    def get_full_name(self):
+        # The user is identified by their email and company
+        return "%s from %s" % (self.email, self.company)
+
+    def get_short_name(self):
+        # The user is identified by their email address
+        return self.email
+
+    def __unicode__(self):
+        return self.email
 
 
 class Tax(BaseEntity):
-    company = models.ForeignKey(Company)
+    user = models.ForeignKey(OrderUser)
     rate = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_('Rate'))
 
     def get_absolute_url(self):
@@ -28,7 +90,7 @@ class Tax(BaseEntity):
 
 
 class Product(BaseEntity):
-    company = models.ForeignKey(Company)
+    user = models.ForeignKey(OrderUser)
     print_name = models.CharField(max_length=50, verbose_name=_('Print name'))
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Price'))
     tax = models.ForeignKey(Tax, verbose_name=_('Tax'))
@@ -42,7 +104,7 @@ class Product(BaseEntity):
 
 
 class Client(BaseEntity):
-    company = models.ForeignKey(Company)
+    user = models.ForeignKey(OrderUser)
     address = models.TextField(verbose_name=_('Address'))
     id_number = models.CharField(max_length=20, verbose_name=_('ID Number'))
 
@@ -55,11 +117,11 @@ class Client(BaseEntity):
 
 
 class Invoice(BaseModel):
-    company = models.ForeignKey(Company)
+    user = models.ForeignKey(OrderUser)
     code = models.CharField(max_length=50, editable=False)
     date = models.DateField()
     client = models.ForeignKey(Client, verbose_name=_('Client'))
-    date_paid = models.DateField(blank=True, null=True)
+    date_paid = models.DateField(blank=True, null=True, verbose_name=("Date paid"))
 
     base = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
     taxes = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
@@ -86,7 +148,7 @@ class Invoice(BaseModel):
         if not self.code and self.id:
             num = 1
             try:
-                lastcode = Invoice.objects.filter(company=self.company).exclude(pk=self.id).order_by('-id')[0].code
+                lastcode = Invoice.objects.filter(user=self.user).exclude(pk=self.id).order_by('-id')[0].code
                 parts = lastcode.split('-')
                 num = int(parts[1]) + 1
             except:
@@ -155,31 +217,10 @@ class InvoiceItem(BaseModel):
         self.taxes = self.base * self.tax_rate / Decimal("100")
         self.total = self.base + self.taxes
 
-    def save(self, force_insert=False, force_update=False, using=None,
-        update_fields=None):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.calculate()
         return BaseModel.save(self, force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
     class Meta:
         verbose_name = _('Invoice item')
         verbose_name_plural = _('Invoice items')
-
-
-class Profile(AbstractUser):
-    """
-    # This field is required.
-    user = models.OneToOneField(User, unique=True, primary_key=True, related_name="user")
-    """
-    company = models.ForeignKey(Company, null=True)
-
-
-
-"""
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        # UserProfile.objects.get_or_create(user=instance)
-        profile = UserProfile(user=instance)
-        profile.save()
-
-post_save.connect(create_user_profile, sender=User)
-"""

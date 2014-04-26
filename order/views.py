@@ -62,27 +62,22 @@ class AddModelNameMixin(object):
         return context
 
 
-class CompanyFilterMixin(AddModelNameMixin, LoginRequiredMixin):
+class AddUserMixin(LoginRequiredMixin):
 
     def get_queryset(self):
-        # Filter the company items only
-        user_company = self.request.user.company
-        return self.model.objects.filter(company=user_company)
-
-
-class AddUserCompanyMixin(CompanyFilterMixin):
-    def _get_company(self):
-        return self.request.user.company
+        """
+        Just show the user entities.
+        """
+        return self.model.objects.filter(user=self.request.user)
 
     def form_valid(self, form):
+        """
+        Add the current user to the "user" field of the entity.
+        """
         self.object = form.save(commit=False)
-        self.object.company = self._get_company()
+        self.object.user = self.request.user
         messages.success(self.request, str(self.object) + " saved.")
-        return super(AddUserCompanyMixin, self).form_valid(form)
-
-
-class ListViewByCompany(CompanyFilterMixin, ListView):
-    pass
+        return super(AddUserMixin, self).form_valid(form)
 
 
 class InvoiceCreateView(LoginRequiredMixin, NamedFormsetsMixin, CreateWithInlinesView):
@@ -94,21 +89,21 @@ class InvoiceCreateView(LoginRequiredMixin, NamedFormsetsMixin, CreateWithInline
     inlines_names = ['InvoiceItemInline']
 
     def get_form(self, form_class):
-        # Filter cilents on main form, by company
+        # Filter cilents on main form, by user
         form = CreateWithInlinesView.get_form(self, form_class)
-        form.fields['client'].queryset = Client.objects.filter(company=self.request.user.company)
+        form.fields['client'].queryset = Client.objects.filter(user=self.request.user)
         return form
 
     def construct_inlines(self):
-        # Filter products inlines, by company
+        # Filter products inlines, by user
         inlines = CreateWithInlinesView.construct_inlines(self)
         invoiceItemInline = inlines[0]
-        invoiceItemInline.form.base_fields['product'].queryset = Product.objects.filter(company=self.request.user.company)
+        invoiceItemInline.form.base_fields['product'].queryset = Product.objects.filter(user=self.request.user)
         return inlines
 
     def forms_valid(self, form, inlines):
-        # Default company
-        self.object.company = self.request.user.company
+        # Default user
+        self.object.user = self.request.user
 
         # Save object to recalculate totals
         out = CreateWithInlinesView.forms_valid(self, form, inlines)
@@ -125,25 +120,21 @@ class InvoiceUpdateView(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
     inlines = [InvoiceItemInline]
     inlines_names = ['InvoiceItemInline']
 
-    def _get_company(self):
-        return self.request.user.company
-
     def get_queryset(self):
-        company = self._get_company()
-        return self.model.objects.filter(company=company)
+        return self.model.objects.filter(user=self.request.user)
 
     def construct_inlines(self):
-        # Only select the products on the company
-        qs = Product.objects.filter(company=self._get_company())
+        # Only select the products on the user
+        qs = Product.objects.filter(user=self.request.user)
         inline_formsets = super(InvoiceUpdateView, self).construct_inlines()
         for form in inline_formsets[0].forms:
             form.fields['product'].queryset = qs
         return inline_formsets
 
     def forms_valid(self, form, inlines):
-        # Default company
-        if not self.object.company:
-            self.object.company = self._get_company()
+        # Default user
+        if not self.object.user:
+            self.object.user = self.request.user
 
         out = UpdateWithInlinesView.forms_valid(self, form, inlines)
 
@@ -153,13 +144,13 @@ class InvoiceUpdateView(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
         return out
 
 
-class CreateViewByCompany(AddUserCompanyMixin, CreateView):
+class CreateUserEntityView(AddModelNameMixin, AddUserMixin, CreateView):
     template_name = "order/entity_form.html"
 
 
-class UpdateViewByCompany(AddUserCompanyMixin, UpdateView):
+class UpdateUserEntityView(AddModelNameMixin, AddUserMixin, UpdateView):
     template_name = "order/entity_form.html"
 
 
-class InvoiceListView(CompanyFilterMixin, ListView):
-    model = Invoice
+class ListViewByUser(AddModelNameMixin, AddUserMixin, ListView):
+    pass

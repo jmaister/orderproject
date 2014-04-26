@@ -212,15 +212,16 @@ AUTHENTICATION_BACKENDS = (
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
-# Django User profile config
-#AUTH_PROFILE_MODULE = 'order.Profile'
-AUTH_USER_MODEL = 'order.Profile'
+# Django: The model to use to represent a User
+AUTH_USER_MODEL = 'order.OrderUser'
 
 # django-allauth config
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"
-ACCOUNT_SIGNUP_FORM_CLASS = 'orderproject.forms.SignupForm'
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
-ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_SIGNUP_FORM_CLASS = 'orderproject.forms.OrderUserForm'
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_AUTO_SIGNUP = False
 

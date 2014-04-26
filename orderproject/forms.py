@@ -1,16 +1,18 @@
 
-from django import forms
-from order.models import Company
+from django.forms.models import ModelForm
+from order.models import OrderUser
 
 
-class SignupForm(forms.Form):
+class OrderUserForm(ModelForm):
 
-    company_name = forms.CharField(max_length=50, label='Company Name', min_length=6)
+    # company = forms.CharField(max_length=50, label='Company Name', min_length=6)
 
     def save(self, user):
-        company_name = self.cleaned_data['company_name']
-        company = Company(name=company_name)
-        company.save()
+        company = self.cleaned_data['company']
 
         user.company = company
         user.save()
+
+    class Meta:
+        model = OrderUser
+        fields = ('email', 'company', 'id_number', 'address')

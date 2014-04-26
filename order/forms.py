@@ -8,11 +8,11 @@ from order.models import Invoice, InvoiceItem, Product, Client, Tax
 class InvoiceForm(forms.ModelForm):
 
     date = forms.DateField(initial=datetime.date.today, label=_('Date'))
-    date_paid = forms.DateField(label=_('Date paid'), required=False)
+    #date_paid = forms.DateField(label=_('Date paid'), required=False)
 
     class Meta:
         model = Invoice
-        exclude = ('company',)
+        fields = ('date', 'client', 'date_paid')
 
 
 class InvoiceItemForm(forms.ModelForm):
@@ -34,18 +34,18 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        exclude = ('company',)
+        fields = ('name', 'print_name', 'price', 'tax')
 
 
 class ClientForm(forms.ModelForm):
 
     class Meta:
         model = Client
-        exclude = ('company',)
+        fields = ('name', 'address', 'id_number')
 
 
 class TaxForm(forms.ModelForm):
 
     class Meta:
         model = Tax
-        exclude = ('company',)
+        fields = ('name', 'rate')
