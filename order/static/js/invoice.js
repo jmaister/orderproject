@@ -54,7 +54,7 @@ var tax_rate = function(row, val) {
 var onProductChange = function(row, override) {
 	var product_id = product(row);
 	if (product_id) {
-	    $.getJSON("/order/json/product/"+ product_id +"/", null, function(data) {
+	    $.getJSON("/order/api/v1/product/"+ product_id +"/?format=json", null, function(data) {
 	        if (!price(row)) {
 	           price(row, data['price']);
 	        }

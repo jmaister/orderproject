@@ -1,15 +1,12 @@
 # Create your views here.
-import json
 
 from django.contrib.auth.decorators import login_required
-from django.core import serializers
 from django.http import HttpResponse
 from django.template.context import Context
 from django.template.loader import get_template
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
-from django.core.serializers.json import DjangoJSONEncoder
 
 from braces.views import LoginRequiredMixin
 
@@ -18,25 +15,6 @@ from extra_views.advanced import NamedFormsetsMixin, CreateWithInlinesView, \
 
 from order.forms import InvoiceForm, InvoiceItemInline
 from order.models import Product, Invoice, InvoiceItem, Tax, Client
-
-
-@login_required
-def _json_view(request, clazz, pk):
-    result = clazz.objects.filter(pk=pk)
-    return HttpResponse(serializers.serialize('json', result), mimetype='application/json')
-
-
-@login_required
-def json_product(request, pk):
-    obj = Product.objects.get(pk=pk)
-    # Only serialize the needed data
-    result = {'price': obj.price, 'tax': {'name': obj.tax.name, 'rate': obj.tax.rate}}
-    return HttpResponse(json.dumps(result, cls=DjangoJSONEncoder), mimetype='application/json')
-
-
-@login_required
-def json_tax(request, pk):
-    return _json_view(request, Tax, pk)
 
 
 @login_required
@@ -125,10 +103,9 @@ class InvoiceUpdateView(LoginRequiredMixin, NamedFormsetsMixin, UpdateWithInline
 
     def construct_inlines(self):
         # Only select the products on the user
-        qs = Product.objects.filter(user=self.request.user)
         inline_formsets = super(InvoiceUpdateView, self).construct_inlines()
         for form in inline_formsets[0].forms:
-            form.fields['product'].queryset = qs
+            form.fields['product'].queryset = Product.objects.filter(user=self.request.user)
         return inline_formsets
 
     def forms_valid(self, form, inlines):
@@ -150,6 +127,12 @@ class CreateUserEntityView(AddModelNameMixin, AddUserMixin, CreateView):
 
 class UpdateUserEntityView(AddModelNameMixin, AddUserMixin, UpdateView):
     template_name = "order/entity_form.html"
+
+    def get_form(self, form_class):
+        form = super(UpdateUserEntityView, self).get_form(form_class)
+        if 'tax' in form.fields:
+            form.fields['tax'].queryset = Tax.objects.filter(user=self.request.user)
+        return form
 
 
 class ListViewByUser(AddModelNameMixin, AddUserMixin, ListView):
